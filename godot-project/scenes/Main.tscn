@@ -1,0 +1,143 @@
+[gd_scene load_steps=6 format=3 uid="uid://main_scene"]
+
+[ext_resource type="Script" path="res://scripts/Main.gd" id="1_main"]
+[ext_resource type="Script" path="res://scripts/GameManager.gd" id="2_gamemanager"]
+[ext_resource type="Script" path="res://scripts/LevelGenerator.gd" id="3_levelgenerator"]
+[ext_resource type="Script" path="res://scripts/UI.gd" id="4_ui"]
+
+[sub_resource type="Theme" id="Theme_1"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_main")
+
+[node name="GameManager" type="Node" parent="."]
+script = ExtResource("2_gamemanager")
+
+[node name="Player" parent="." instance=ExtResource("res://scenes/Player.tscn")]
+position = Vector2(100, 400)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position_smoothing_enabled = true
+
+[node name="LevelGenerator" type="Node2D" parent="."]
+script = ExtResource("3_levelgenerator")
+
+[node name="UI" type="CanvasLayer" parent="."]
+script = ExtResource("4_ui")
+
+[node name="GameUI" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -100.0
+offset_right = 400.0
+offset_bottom = -20.0
+
+[node name="ScoreLabel" type="Label" parent="UI/GameUI"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -50.0
+offset_right = 200.0
+offset_bottom = -10.0
+theme = SubResource("Theme_1")
+text = "Score: 0"
+
+[node name="LevelLabel" type="Label" parent="UI/GameUI"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -80.0
+offset_right = 200.0
+offset_bottom = -50.0
+theme = SubResource("Theme_1")
+text = "Level: City Rooftops"
+
+[node name="StartScreen" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="ColorRect" type="ColorRect" parent="UI/StartScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.1, 0.1, 0.1, 0.8)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/StartScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -150.0
+offset_right = 200.0
+offset_bottom = 150.0
+
+[node name="TitleLabel" type="Label" parent="UI/StartScreen/VBoxContainer"]
+layout_mode = 2
+theme = SubResource("Theme_1")
+text = "SHADOW RUNNER"
+horizontal_alignment = 1
+
+[node name="InstructionsLabel" type="Label" parent="UI/StartScreen/VBoxContainer"]
+layout_mode = 2
+theme = SubResource("Theme_1")
+text = "Tap to Jump | Hold for Long Jump | Slide to Dodge"
+horizontal_alignment = 1
+
+[node name="StartButton" type="Button" parent="UI/StartScreen/VBoxContainer"]
+layout_mode = 2
+text = "START GAME"
+
+[node name="GameOverScreen" type="Control" parent="UI"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="ColorRect" type="ColorRect" parent="UI/GameOverScreen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.1, 0.1, 0.1, 0.8)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/GameOverScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -100.0
+offset_right = 150.0
+offset_bottom = 100.0
+
+[node name="GameOverLabel" type="Label" parent="UI/GameOverScreen/VBoxContainer"]
+layout_mode = 2
+theme = SubResource("Theme_1")
+text = "GAME OVER"
+horizontal_alignment = 1
+
+[node name="FinalScoreLabel" type="Label" parent="UI/GameOverScreen/VBoxContainer"]
+layout_mode = 2
+theme = SubResource("Theme_1")
+text = "Final Score: 0"
+horizontal_alignment = 1
+
+[node name="RestartButton" type="Button" parent="UI/GameOverScreen/VBoxContainer"]
+layout_mode = 2
+text = "RESTART"

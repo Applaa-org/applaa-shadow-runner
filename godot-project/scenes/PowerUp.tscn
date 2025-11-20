@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://powerup_scene"]
+
+[ext_resource type="Script" path="res://scripts/PowerUp.gd" id="1_powerup"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1"]
+radius = 20.0
+
+[node name="PowerUp" type="Area2D"]
+script = ExtResource("1_powerup")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0, 1, 1, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_1")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="PowerUpSound" type="AudioStreamPlayer2D" parent="."]

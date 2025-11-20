@@ -1,0 +1,185 @@
+{
+  "game": {
+    "name": "Shadow Runner",
+    "type": "2D",
+    "description": "A 2D side-scrolling endless runner where players automatically run through dynamic environments, jumping, sliding, and collecting coins while avoiding enemy lasers.",
+    "genre": "action",
+    "version": "1.0.0"
+  },
+  "settings": {
+    "window": {
+      "width": 1280,
+      "height": 720,
+      "resizable": true,
+      "fullscreen": false
+    },
+    "physics": {
+      "enabled": true
+    },
+    "rendering": {}
+  },
+  "player": {
+    "speed": 300,
+    "jumpVelocity": -500,
+    "slideDuration": 0.8,
+    "health": 100
+  },
+  "levels": [
+    {
+      "name": "City Rooftops",
+      "theme": "city",
+      "background": "#1a1a2e",
+      "platformColor": "#16213e",
+      "obstacleColor": "#e94560"
+    },
+    {
+      "name": "Old Ruins",
+      "theme": "ruins",
+      "background": "#3d2817",
+      "platformColor": "#5c4033",
+      "obstacleColor": "#8b4513"
+    },
+    {
+      "name": "Jungle Temple",
+      "theme": "jungle",
+      "background": "#0d2818",
+      "platformColor": "#1e3a2e",
+      "obstacleColor": "#4a7c59"
+    },
+    {
+      "name": "Cyber World",
+      "theme": "cyber",
+      "background": "#0a0a0a",
+      "platformColor": "#1a1a2e",
+      "obstacleColor": "#00ffff"
+    }
+  ],
+  "powerups": [
+    {
+      "name": "shield",
+      "duration": 5.0,
+      "effect": "invincibility"
+    },
+    {
+      "name": "slowmo",
+      "duration": 3.0,
+      "effect": "slow_time"
+    },
+    {
+      "name": "jetpack",
+      "duration": 4.0,
+      "effect": "flight"
+    }
+  ],
+  "scenes": [],
+  "assets": {
+    "sprites": [
+      {
+        "name": "player",
+        "path": "res://assets/sprites/runner.png",
+        "type": "character"
+      },
+      {
+        "name": "laser_turret",
+        "path": "res://assets/sprites/turret.png",
+        "type": "enemy"
+      },
+      {
+        "name": "drone",
+        "path": "res://assets/sprites/drone.png",
+        "type": "enemy"
+      },
+      {
+        "name": "coin",
+        "path": "res://assets/sprites/coin.png",
+        "type": "collectible"
+      },
+      {
+        "name": "shield_powerup",
+        "path": "res://assets/sprites/shield.png",
+        "type": "powerup"
+      },
+      {
+        "name": "slowmo_powerup",
+        "path": "res://assets/sprites/slowmo.png",
+        "type": "powerup"
+      },
+      {
+        "name": "jetpack_powerup",
+        "path": "res://assets/sprites/jetpack.png",
+        "type": "powerup"
+      },
+      {
+        "name": "platform_city",
+        "path": "res://assets/sprites/platform_city.png",
+        "type": "obstacle"
+      },
+      {
+        "name": "platform_ruins",
+        "path": "res://assets/sprites/platform_ruins.png",
+        "type": "obstacle"
+      },
+      {
+        "name": "platform_jungle",
+        "path": "res://assets/sprites/platform_jungle.png",
+        "type": "obstacle"
+      },
+      {
+        "name": "platform_cyber",
+        "path": "res://assets/sprites/platform_cyber.png",
+        "type": "obstacle"
+      }
+    ],
+    "sounds": [
+      {
+        "name": "jump",
+        "path": "res://assets/sounds/jump.wav",
+        "type": "sfx"
+      },
+      {
+        "name": "slide",
+        "path": "res://assets/sounds/slide.wav",
+        "type": "sfx"
+      },
+      {
+        "name": "coin_collect",
+        "path": "res://assets/sounds/coin.wav",
+        "type": "sfx"
+      },
+      {
+        "name": "laser_shoot",
+        "path": "res://assets/sounds/laser.wav",
+        "type": "sfx"
+      },
+      {
+        "name": "powerup",
+        "path": "res://assets/sounds/powerup.wav",
+        "type": "sfx"
+      },
+      {
+        "name": "hit",
+        "path": "res://assets/sounds/hit.wav",
+        "type": "sfx"
+      }
+    ],
+    "music": [
+      {
+        "name": "city_theme",
+        "path": "res://assets/music/city.ogg"
+      },
+      {
+        "name": "ruins_theme",
+        "path": "res://assets/music/ruins.ogg"
+      },
+      {
+        "name": "jungle_theme",
+        "path": "res://assets/music/jungle.ogg"
+      },
+      {
+        "name": "cyber_theme",
+        "path": "res://assets/music/cyber.ogg"
+      }
+    ]
+  },
+  "scripts": []
+}
