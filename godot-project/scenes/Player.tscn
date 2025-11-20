@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://player_scene"]
+[gd_scene load_steps=4 format=3 uid="uid://player_scene"]
 
 [ext_resource type="Script" path="res://scripts/Player.gd" id="1_player"]
 
@@ -7,12 +7,6 @@ size = Vector2(40, 60)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2"]
 size = Vector2(60, 30)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_3"]
-size = Vector2(10, 40)
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_1"]
-radius = 100.0
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_player")
@@ -29,71 +23,11 @@ position = Vector2(0, 15)
 shape = SubResource("RectangleShape2D_2")
 disabled = true
 
-[node name="WallDetectorLeft" type="Area2D" parent="."]
-position = Vector2(-25, 0)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="WallDetectorLeft"]
-shape = SubResource("RectangleShape2D_3")
-
-[node name="WallDetectorRight" type="Area2D" parent="."]
-position = Vector2(25, 0)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="WallDetectorRight"]
-shape = SubResource("RectangleShape2D_3")
-
 [node name="Shield" type="Sprite2D" parent="."]
 visible = false
 modulate = Color(0, 1, 1, 0.5)
 
-[node name="Jetpack" type="Sprite2D" parent="."]
-visible = false
-modulate = Color(1, 0.647059, 0, 1)
-
-[node name="MagnetEffect" type="Sprite2D" parent="."]
-visible = false
-modulate = Color(1, 0, 1, 0.3)
-
-[node name="JetpackParticles" type="GPUParticles2D" parent="."]
-emitting = false
-amount = 20
-lifetime = 1.0
-direction = Vector2(0, 1)
-spread = 15.0
-initial_velocity_min = 50.0
-initial_velocity_max = 100.0
-gravity = Vector2(0, 0)
-scale_amount_min = 0.1
-scale_amount_max = 0.3
-
-[node name="DoubleJumpParticles" type="GPUParticles2D" parent="."]
-emitting = false
-amount = 15
-lifetime = 0.8
-direction = Vector2(0, -1)
-spread = 45.0
-initial_velocity_min = 100.0
-initial_velocity_max = 200.0
-gravity = Vector2(0, 200)
-scale_amount_min = 0.1
-scale_amount_max = 0.3
-
-[node name="WallJumpParticles" type="GPUParticles2D" parent="."]
-emitting = false
-amount = 10
-lifetime = 0.6
-direction = Vector2(1, 0)
-spread = 30.0
-initial_velocity_min= 50.0
-initial_velocity_max = 150.0
-gravity = Vector2(0, 100)
-scale_amount_min = 0.1
-scale_amount_max = 0.3
-
 [node name="JumpSound" type="AudioStreamPlayer2D" parent="."]
-
-[node name="DoubleJumpSound" type="AudioStreamPlayer2D" parent="."]
-
-[node name="WallJumpSound" type="AudioStreamPlayer2D" parent="."]
 
 [node name="SlideSound" type="AudioStreamPlayer2D" parent="."]
 

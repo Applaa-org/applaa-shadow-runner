@@ -2,7 +2,7 @@
   "game": {
     "name": "Shadow Runner",
     "type": "2D",
-    "description": "A 2D side-scrolling endless runner with enhanced controls and multiple themed levels.",
+    "description": "A simple 2D side-scrolling runner with easy controls and slower pace.",
     "genre": "action",
     "version": "1.0.0"
   },
@@ -19,272 +19,59 @@
     "rendering": {}
   },
   "player": {
-    "speed": 300,
-    "jumpVelocity": -500,
-    "slideDuration": 0.8,
-    "health": 100,
-    "doubleJump": true,
-    "wallJump": true
+    "speed": 150,
+    "jumpVelocity": -300,
+    "slideDuration": 1.0,
+    "health": 100
   },
   "controls": {
-    "jump": ["Space", "W", "Up Arrow", "Mouse Click", "Touch"],
-    "slide": ["S", "Down Arrow", "Right Mouse"],
-    "doubleJump": ["Space", "W", "Up Arrow"],
-    "wallJump": ["Space", "W", "Up Arrow"],
-    "pause": ["Escape", "P"]
+    "jump": ["Space"],
+    "slide": ["Down Arrow"],
+    "pause": ["Escape"]
   },
   "levels": [
     {
-      "name": "City Rooftops",
+      "name": "Easy City",
       "theme": "city",
       "background": "#1a1a2e",
       "platformColor": "#16213e",
       "obstacleColor": "#e94560",
-      "difficulty": 1,
-      "music": "city_theme"
+      "difficulty": 1
     },
     {
-      "name": "Old Ruins",
-      "theme": "ruins",
-      "background": "#3d2817",
-      "platformColor": "#5c4033",
-      "obstacleColor": "#8b4513",
-      "difficulty": 2,
-      "music": "ruins_theme"
-    },
-    {
-      "name": "Jungle Temple",
-      "theme": "jungle",
+      "name": "Green Park",
+      "theme": "park",
       "background": "#0d2818",
       "platformColor": "#1e3a2e",
       "obstacleColor": "#4a7c59",
-      "difficulty": 3,
-      "music": "jungle_theme"
+      "difficulty": 1
     },
     {
-      "name": "Cyber World",
-      "theme": "cyber",
-      "background": "#0a0a0a",
-      "platformColor": "#1a1a2e",
-      "obstacleColor": "#00ffff",
-      "difficulty": 4,
-      "music": "cyber_theme"
-    },
-    {
-      "name": "Crystal Caves",
-      "theme": "crystal",
-      "background": "#1a0033",
-      "platformColor": "#4a0080",
-      "obstacleColor": "#ff00ff",
-      "difficulty": 5,
-      "music": "crystal_theme"
-    },
-    {
-      "name": "Lava Fields",
-      "theme": "lava",
-      "background": "#330000",
-      "platformColor": "#661100",
-      "obstacleColor": "#ff3300",
-      "difficulty": 6,
-      "music": "lava_theme"
-    },
-    {
-      "name": "Ice Mountains",
-      "theme": "ice",
-      "background": "#e6f3ff",
-      "platformColor": "#b3d9ff",
-      "obstacleColor": "#0066cc",
-      "difficulty": 7,
-      "music": "ice_theme"
-    },
-    {
-      "name": "Desert Dunes",
-      "theme": "desert",
-      "background": "#ffcc66",
-      "platformColor": "#ff9933",
-      "obstacleColor": "#cc6600",
-      "difficulty": 8,
-      "music": "desert_theme"
-    },
-    {
-      "name": "Space Station",
-      "theme": "space",
-      "background": "#000033",
-      "platformColor": "#333366",
-      "obstacleColor": "#66ccff",
-      "difficulty": 9,
-      "music": "space_theme"
-    },
-    {
-      "name": "Shadow Realm",
-      "theme": "shadow",
-      "background": "#0a0a0a",
-      "platformColor": "#1a1a1a",
-      "obstacleColor": "#ff0066",
-      "difficulty": 10,
-      "music": "shadow_theme"
+      "name": "Blue Sky",
+      "theme": "sky",
+      "background": "#1a3a5c",
+      "platformColor": "#2a4a6c",
+      "obstacleColor": "#4a7c9c",
+      "difficulty": 1
     }
   ],
   "powerups": [
     {
       "name": "shield",
-      "duration": 5.0,
+      "duration": 8.0,
       "effect": "invincibility"
     },
     {
       "name": "slowmo",
-      "duration": 3.0,
+      "duration": 5.0,
       "effect": "slow_time"
-    },
-    {
-      "name": "jetpack",
-      "duration": 4.0,
-      "effect": "flight"
-    },
-    {
-      "name": "magnet",
-      "duration": 6.0,
-      "effect": "coin_attraction"
-    },
-    {
-      "name": "speed_boost",
-      "duration": 3.0,
-      "effect": "increased_speed"
     }
   ],
   "scenes": [],
   "assets": {
-    "sprites": [
-      {
-        "name": "player",
-        "path": "res://assets/sprites/runner.png",
-        "type": "character"
-      },
-      {
-        "name": "laser_turret",
-        "path": "res://assets/sprites/turret.png",
-        "type": "enemy"
-      },
-      {
-        "name": "drone",
-        "path": "res://assets/sprites/drone.png",
-        "type": "enemy"
-      },
-      {
-        "name": "coin",
-        "path": "res://assets/sprites/coin.png",
-        "type": "collectible"
-      },
-      {
-        "name": "shield_powerup",
-        "path": "res://assets/sprites/shield.png",
-        "type": "powerup"
-      },
-      {
-        "name": "slowmo_powerup",
-        "path": "res://assets/sprites/slowmo.png",
-        "type": "powerup"
-      },
-      {
-        "name": "jetpack_powerup",
-        "path": "res://assets/sprites/jetpack.png",
-        "type": "powerup"
-      },
-      {
-        "name": "magnet_powerup",
-        "path": "res://assets/sprites/magnet.png",
-        "type": "powerup"
-      },
-      {
-        "name": "speed_powerup",
-        "path": "res://assets/sprites/speed.png",
-        "type": "powerup"
-      }
-    ],
-    "sounds": [
-      {
-        "name": "jump",
-        "path": "res://assets/sounds/jump.wav",
-        "type": "sfx"
-      },
-      {
-        "name": "double_jump",
-        "path": "res://assets/sounds/double_jump.wav",
-        "type": "sfx"
-      },
-      {
-        "name": "wall_jump",
-        "path": "res://assets/sounds/wall_jump.wav",
-        "type": "sfx"
-      },
-      {
-        "name": "slide",
-        "path": "res://assets/sounds/slide.wav",
-        "type": "sfx"
-      },
-      {
-        "name": "coin_collect",
-        "path": "res://assets/sounds/coin.wav",
-        "type": "sfx"
-      },
-      {
-        "name": "laser_shoot",
-        "path": "res://assets/sounds/laser.wav",
-        "type": "sfx"
-      },
-      {
-        "name": "powerup",
-        "path": "res://assets/sounds/powerup.wav",
-        "type": "sfx"
-      },
-      {
-        "name": "hit",
-        "path": "res://assets/sounds/hit.wav",
-        "type": "sfx"
-      }
-    ],
-    "music": [
-      {
-        "name": "city_theme",
-        "path": "res://assets/music/city.ogg"
-      },
-      {
-        "name": "ruins_theme",
-        "path": "res://assets/music/ruins.ogg"
-      },
-      {
-        "name": "jungle_theme",
-        "path": "res://assets/music/jungle.ogg"
-      },
-      {
-        "name": "cyber_theme",
-        "path": "res://assets/music/cyber.ogg"
-      },
-      {
-        "name": "crystal_theme",
-        "path": "res://assets/music/crystal.ogg"
-      },
-      {
-        "name": "lava_theme",
-        "path": "res://assets/music/lava.ogg"
-      },
-      {
-        "name": "ice_theme",
-        "path": "res://assets/music/ice.ogg"
-      },
-      {
-        "name": "desert_theme",
-        "path": "res://assets/music/desert.ogg"
-      },
-      {
-        "name": "space_theme",
-        "path": "res://assets/music/space.ogg"
-      },
-      {
-        "name": "shadow_theme",
-        "path": "res://assets/music/shadow.ogg"
-      }
-    ]
+    "sprites": [],
+    "sounds": [],
+    "music": []
   },
   "scripts": []
 }

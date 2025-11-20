@@ -57,7 +57,7 @@ offset_top = -80.0
 offset_right = 200.0
 offset_bottom = -50.0
 theme = SubResource("Theme_1")
-text = "Level: City Rooftops"
+text = "Level: Easy City"
 
 [node name="StartScreen" type="Control" parent="UI"]
 layout_mode = 3
@@ -93,7 +93,13 @@ horizontal_alignment = 1
 [node name="InstructionsLabel" type="Label" parent="UI/StartScreen/VBoxContainer"]
 layout_mode = 2
 theme = SubResource("Theme_1")
-text = "Tap to Jump | Hold for Long Jump | Slide to Dodge"
+text = "EASY MODE - SPACEBAR TO JUMP"
+horizontal_alignment = 1
+
+[node name="InstructionsLabel2" type="Label" parent="UI/StartScreen/VBoxContainer"]
+layout_mode = 2
+theme = SubResource("Theme_1")
+text = "DOWN ARROW TO SLIDE"
 horizontal_alignment = 1
 
 [node name="StartButton" type="Button" parent="UI/StartScreen/VBoxContainer"]
