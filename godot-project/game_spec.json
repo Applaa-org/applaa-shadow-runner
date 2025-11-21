@@ -1,9 +1,9 @@
 {
   "game": {
-    "name": "Shadow Runner - Multi Level",
+    "name": "Shadow Runner - Adventure",
     "type": "2D",
-    "description": "A multi-level 2D runner with different themes and challenges.",
-    "genre": "action",
+    "description": "An exciting adventure runner with smooth controls and fun gameplay.",
+    "genre": "adventure",
     "version": "1.0.0"
   },
   "settings": {
@@ -19,12 +19,13 @@
     "rendering": {}
   },
   "player": {
-    "speed": 100,
-    "jumpVelocity": -250,
-    "slideDuration": 1.2,
+    "speed": 120,
+    "jumpVelocity": -350,
+    "slideDuration": 1.0,
     "health": 100,
-    "doubleJump": false,
-    "wallJump": false
+    "doubleJump": true,
+    "wallJump": false,
+    "magnetRange": 100
   },
   "controls": {
     "jump": ["Space", "W", "Up Arrow"],
@@ -33,61 +34,66 @@
   },
   "levels": [
     {
-      "name": "City Streets",
-      "theme": "city",
-      "background": "#1a1a2e",
-      "platformColor": "#16213e",
-      "obstacleColor": "#e94560",
+      "name": "Crystal Caves",
+      "theme": "crystal",
+      "background": "#1a0033",
+      "platformColor": "#4a0080",
+      "obstacleColor": "#ff00ff",
       "difficulty": 1
     },
     {
-      "name": "Forest Path",
-      "theme": "forest",
-      "background": "#0d2818",
-      "platformColor": "#1e3a2e",
-      "obstacleColor": "#4a7c59",
+      "name": "Golden Desert",
+      "theme": "desert",
+      "background": "#ff8c00",
+      "platformColor": "#ffa500",
+      "obstacleColor": "#ff4500",
       "difficulty": 2
     },
     {
-      "name": "Desert Dunes",
-      "theme": "desert",
-      "background": "#3e2723",
-      "platformColor": "#5d4037",
-      "obstacleColor": "#ff6f00",
+      "name": "Ocean Depths",
+      "theme": "ocean",
+      "background": "#006994",
+      "platformColor": "#0099cc",
+      "obstacleColor": "#00ccff",
       "difficulty": 3
     },
     {
-      "name": "Ice Mountains",
-      "theme": "ice",
-      "background": "#1a237e",
-      "platformColor": "#283593",
-      "obstacleColor": "#64b5f6",
+      "name": "Volcano Peak",
+      "theme": "volcano",
+      "background": "#8b0000",
+      "platformColor": "#dc143c",
+      "obstacleColor": "#ff6347",
       "difficulty": 4
     },
     {
-      "name": "Space Station",
-      "theme": "space",
-      "background": "#000000",
-      "platformColor": "#1a1a1a",
-      "obstacleColor": "#ff00ff",
+      "name": "Sky Temple",
+      "theme": "sky",
+      "background": "#87ceeb",
+      "platformColor": "#b0e0e6",
+      "obstacleColor": "#ffffff",
       "difficulty": 5
     }
   ],
   "powerups": [
     {
-      "name": "shield",
+      "name": "super_jump",
       "duration": 8.0,
+      "effect": "enhanced_jump"
+    },
+    {
+      "name": "magnet",
+      "duration": 10.0,
+      "effect": "coin_magnet"
+    },
+    {
+      "name": "shield",
+      "duration": 6.0,
       "effect": "invincibility"
     },
     {
       "name": "speed",
       "duration": 5.0,
       "effect": "speed_boost"
-    },
-    {
-      "name": "magnet",
-      "duration": 6.0,
-      "effect": "coin_magnet"
     }
   ],
   "scenes": [],

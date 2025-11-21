@@ -1,9 +1,11 @@
 extends CharacterBody2D
 
-const SPEED = 100.0
-const JUMP_VELOCITY = -250.0
-const SLIDE_DURATION = 1.2
-const GRAVITY = 400.0
+const SPEED = 120.0
+const JUMP_VELOCITY = -350.0
+const DOUBLE_JUMP_VELOCITY = -300.0
+const SLIDE_DURATION = 1.0
+const GRAVITY = 500.0
+const MAGNET_RANGE = 100.0
 
 @onready var sprite = $Sprite2D
 @onready var collision_shape = $CollisionShape2D
@@ -18,23 +20,27 @@ var slide_timer = 0.0
 var has_shield = false
 var has_speed_boost = false
 var has_magnet = false
+var has_super_jump = false
 var is_jumping = false
 var can_jump = true
+var can_double_jump = true
 var jump_cooldown = 0.0
 var speed_boost_timer = 0.0
 var magnet_timer = 0.0
+var super_jump_timer = 0.0
+var jump_count = 0
 
 func _ready():
 	slide_collision.disabled = true
 	setup_character_appearance()
 
 func setup_character_appearance():
-	# Make character look like a person
+	# Make character look more vibrant
 	head.modulate = Color.FLORAL_WHITE
 	head.position = Vector2(0, -20)
-	body.modulate = Color.BLUE
+	body.modulate = Color.CYAN
 	body.position = Vector2(0, 0)
-	legs.modulate = Color.DARK_BLUE
+	legs.modulate = Color.BLUE_VIOLET
 	legs.position = Vector2(0, 20)
 
 func _physics_process(delta):
@@ -44,6 +50,8 @@ func _physics_process(delta):
 	else:
 		is_jumping = false
 		can_jump = true
+		can_double_jump = true
+		jump_count = 0
 	
 	# Handle jump cooldown
 	if jump_cooldown > 0:
@@ -68,13 +76,33 @@ func _physics_process(delta):
 		if magnet_timer <= 0:
 			has_magnet = false
 	
-	# Handle jump
-	if Input.is_action_just_pressed("jump") and is_on_floor() and not is_sliding and can_jump:
-		velocity.y = JUMP_VELOCITY
-		is_jumping = true
-		can_jump = false
-		jump_cooldown = 0.2
-		animate_jump()
+	if has_super_jump:
+		super_jump_timer -= delta
+		if super_jump_timer <= 0:
+			has_super_jump = false
+	
+	# Handle jump with double jump
+	if Input.is_action_just_pressed("jump") and not is_sliding:
+		if is_on_floor() and can_jump:
+			# First jump
+			var jump_power = JUMP_VELOCITY
+			if has_super_jump:
+				jump_power *= 1.5
+			velocity.y = jump_power
+			is_jumping = true
+			can_jump = false
+			jump_cooldown = 0.1
+			jump_count = 1
+			animate_jump()
+		elif can_double_jump and jump_count == 1:
+			# Double jump
+			var jump_power = DOUBLE_JUMP_VELOCITY
+			if has_super_jump:
+				jump_power *= 1.3
+			velocity.y = jump_power
+			can_double_jump = false
+			jump_count = 2
+			animate_double_jump()
 	
 	# Handle slide
 	if Input.is_action_just_pressed("slide") and is_on_floor() and not is_sliding:
@@ -91,6 +119,18 @@ func _physics_process(delta):
 	
 	# Update character animation
 	update_character_animation()
+	
+	# Collect nearby coins with magnet
+	if has_magnet:
+		attract_coins()
+
+func attract_coins():
+	var coins = get_tree().get_nodes_in_group("coins")
+	for coin in coins:
+		var distance = global_position.distance_to(coin.global_position)
+		if distance <= MAGNET_RANGE:
+			var direction = (global_position - coin.global_position).normalized()
+			coin.global_position += direction * 400 * get_process_delta_time()
 
 func animate_jump():
 	# Jump animation
@@ -100,12 +140,21 @@ func animate_jump():
 	legs.scale.y = 1.0
 	body.scale.y = 1.0
 
+func animate_double_jump():
+	# Double jump animation with flip
+	sprite.scale.x = 1.2
+	sprite.rotation = 0.2
+	await get_tree().create_timer(0.1).timeout
+	sprite.scale.x = 1.0
+	sprite.rotation = 0
+
 func update_character_animation():
-	# Simple walking animation
+	# Enhanced walking animation
 	if is_on_floor() and not is_sliding:
 		var time = Time.get_time_dict_from_system().second
-		legs.scale.x = 1.0 + sin(time * 10) * 0.1
-		body.position.y = sin(time * 8) * 2
+		legs.scale.x = 1.0 + sin(time * 12) * 0.15
+		body.position.y = sin(time * 10) * 3
+		head.position.y = -20 + sin(time * 8) * 2
 
 func start_slide():
 	is_sliding = true
@@ -136,7 +185,11 @@ func enable_speed_boost():
 
 func enable_magnet():
 	has_magnet = true
-	magnet_timer = 6.0
+	magnet_timer = 10.0
+
+func enable_super_jump():
+	has_super_jump = true
+	super_jump_timer = 8.0
 
 func disable_shield():
 	has_shield = false

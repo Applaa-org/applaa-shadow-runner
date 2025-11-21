@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Shadow Runner - Multi Level</title>
+    <title>Shadow Runner - Adventure</title>
     <meta charset="UTF-8">
     <style>
         * {
@@ -14,7 +14,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #ffffff;
             overflow: hidden;
@@ -25,50 +25,59 @@
             position: relative;
         }
         #gameCanvas {
-            border: 2px solid #4a9eff;
-            border-radius: 8px;
-            background: #1a1a2e;
-            box-shadow: 0 4px 30px rgba(74, 158, 255, 0.4);
+            border: 3px solid #ffd700;
+            border-radius: 12px;
+            background: #1a0033;
+            box-shadow: 0 8px 40px rgba(255, 215, 0, 0.4);
             display: block;
             margin: 20px auto;
             cursor: pointer;
         }
         h1 {
-            color: #4a9eff;
+            color: #ffd700;
             margin-bottom: 10px;
-            font-size: 32px;
-            text-shadow: 0 0 20px rgba(74, 158, 255, 0.5);
+            font-size: 36px;
+            text-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 25px rgba(255, 215, 0, 0.6); }
+            to { text-shadow: 0 0 35px rgba(255, 215, 0, 0.8), 0 0 45px rgba(255, 215, 0, 0.4); }
         }
         .info {
-            color: #cccccc;
-            font-size: 16px;
+            color: #ffffff;
+            font-size: 18px;
             margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         }
         .controls {
             margin-top: 15px;
-            color: #4ade80;
-            font-size: 18px;
+            color: #00ff00;
+            font-size: 20px;
             font-weight: bold;
+            text-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
         }
         .score {
             color: #ffd700;
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
             margin-top: 10px;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
         }
         .level {
-            color: #60a5fa;
-            font-size: 18px;
+            color: #00ffff;
+            font-size: 20px;
             margin-top: 5px;
+            text-shadow: 0 0 12px rgba(0, 255, 255, 0.5);
         }
         .powerup-indicator {
             position: absolute;
             top: 20px;
             right: 20px;
-            color: #fbbf24;
-            font-size: 16px;
+            color: #ff00ff;
+            font-size: 18px;
             font-weight: bold;
+            text-shadow: 0 0 15px rgba(255, 0, 255, 0.6);
         }
         .start-screen, .game-over-screen, .level-complete-screen {
             position: absolute;
@@ -76,79 +85,94 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            border-radius: 8px;
+            border-radius: 12px;
+            backdrop-filter: blur(5px);
         }
         .start-screen h2, .game-over-screen h2, .level-complete-screen h2 {
-            color: #4a9eff;
-            font-size: 36px;
+            color: #ffd700;
+            font-size: 42px;
             margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
         }
         .start-screen p, .game-over-screen p, .level-complete-screen p {
-            color: #cccccc;
-            font-size: 18px;
+            color: #ffffff;
+            font-size: 20px;
             margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         }
         .btn {
-            background: linear-gradient(45deg, #4a9eff, #6bb6ff);
-            color: white;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #000000;
             border: none;
-            padding: 15px 40px;
-            font-size: 18px;
-            border-radius: 25px;
+            padding: 18px 50px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 30px;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(74, 158, 255, 0.3);
-            margin: 5px;
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+            margin: 8px;
         }
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(74, 158, 255, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
         }
         .hidden {
             display: none !important;
         }
         .level-progress {
-            color: #fbbf24;
-            font-size: 16px;
+            color: #ff00ff;
+            font-size: 18px;
             margin-top: 10px;
+            text-shadow: 0 0 12px rgba(255, 0, 255, 0.5);
+        }
+        .combo-indicator {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            color: #00ff00;
+            font-size: 16px;
+            font-weight: bold;
+            text-shadow: 0 0 12px rgba(0, 255, 0, 0.5);
         }
     </style>
 </head>
 <body>
     <div id="gameContainer">
-        <h1>🏃 Shadow Runner - Multi Level</h1>
-        <div class="info">Multi-level runner with different themes</div>
+        <h1>🌟 Shadow Runner - Adventure 🌟</h1>
+        <div class="info">Exciting adventure with smooth controls and fun gameplay!</div>
         <canvas id="gameCanvas" width="1280" height="720"></canvas>
         <div class="score">Score: <span id="score">0</span></div>
-        <div class="level">Level: <span id="level">City Streets</span></div>
+        <div class="level">Level: <span id="level">Crystal Caves</span></div>
         <div class="level-progress">Progress: <span id="progress">1/5</span></div>
+        <div class="combo-indicator hidden" id="comboIndicator">Combo x<span id="comboCount">0</span></div>
         <div class="powerup-indicator hidden" id="powerupIndicator"></div>
         <div class="controls">
-            🎮 SPACEBAR = JUMP | DOWN ARROW = SLIDE
+            🎮 SPACEBAR = JUMP (DOUBLE JUMP!) | DOWN ARROW = SLIDE
         </div>
         
         <div class="start-screen" id="startScreen">
-            <h2>SHADOW RUNNER - MULTI LEVEL</h2>
-            <p>Run through 5 different themed levels!</p>
-            <p>City → Forest → Desert → Ice → Space</p>
-            <p>Press SPACEBAR to jump, DOWN ARROW to slide</p>
-            <button class="btn" onclick="startGame()">START GAME</button>
+            <h2>🌟 SHADOW RUNNER - ADVENTURE 🌟</h2>
+            <p>Experience the ultimate adventure!</p>
+            <p>Crystal Caves → Golden Desert → Ocean Depths → Volcano Peak → Sky Temple</p>
+            <p>🚀 DOUBLE JUMP available! 🧲 Auto-magnet coins! 🛡️ Collect power-ups!</p>
+            <button class="btn" onclick="startGame()">START ADVENTURE</button>
         </div>
         
         <div class="level-complete-screen hidden" id="levelCompleteScreen">
-            <h2>LEVEL COMPLETE!</h2>
-            <p>Score: <span id="levelScore">0</span></p>
-            <p>Ready for the next challenge?</p>
+            <h2>🎉 LEVEL COMPLETE! 🎉</h2>
+            <p>Amazing Score: <span id="levelScore">0</span></p>
+            <p>Ready for the next adventure?</p>
             <button class="btn" onclick="nextLevel()">NEXT LEVEL</button>
         </div>
         
         <div class="game-over-screen hidden" id="gameOverScreen">
-            <h2>GAME OVER</h2>
+            <h2>💫 ADVENTURE COMPLETE 💫</h2>
             <p>Final Score: <span id="finalScore">0</span></p>
             <p>Levels Completed: <span id="levelsCompleted">0</span></p>
             <button class="btn" onclick="restartGame()">PLAY AGAIN</button>
@@ -168,8 +192,10 @@
         const levelsCompletedElement = document.getElementById('levelsCompleted');
         const levelScoreElement = document.getElementById('levelScore');
         const powerupIndicator = document.getElementById('powerupIndicator');
+        const comboIndicator = document.getElementById('comboIndicator');
+        const comboCountElement = document.getElementById('comboCount');
         
-        // Game state
+        // Game state - ENHANCED
         let gameStarted = false;
         let gameOver = false;
         let score = 0;
@@ -177,13 +203,16 @@
         let levelsCompleted = 0;
         let cameraX = 0;
         let levelComplete = false;
+        let combo = 0;
+        let lastCoinTime = 0;
         
         const canvasWidth = 1280;
         const canvasHeight = 720;
-        const GRAVITY = 400;
-        const AUTO_RUN_SPEED = 100;
+        const GRAVITY = 500;  // Better gravity
+        const AUTO_RUN_SPEED = 120;  // Faster speed
+        const DOUBLE_JUMP_VELOCITY = -300;  // Double jump power
         
-        // Player state
+        // Player state - ENHANCED
         let player = {
             x: 200,
             y: 400,
@@ -192,21 +221,27 @@
             velocityX: 0,
             velocityY: 0,
             speed: AUTO_RUN_SPEED,
-            jumpPower: -250,
+            jumpPower: -350,  // Higher jump
+            doubleJumpPower: -300,
             onGround: false,
             isSliding: false,
             slideTimer: 0,
-            slideDuration: 1.2,
+            slideDuration: 1.0,
             hasShield: false,
             hasSpeedBoost: false,
             hasMagnet: false,
+            hasSuperJump: false,
             canJump: true,
+            canDoubleJump: true,
             jumpCooldown: 0,
+            jumpCount: 0,
             speedBoostTimer: 0,
-            magnetTimer: 0
+            magnetTimer: 0,
+            superJumpTimer: 0,
+            magnetRange: 100
         };
         
-        // Game objects
+        // Game objects - MORE COLLECTIBLES
         let platforms = [];
         let obstacles = [];
         let enemies = [];
@@ -214,67 +249,68 @@
         let coins = [];
         let powerups = [];
         let particles = [];
+        let stars = [];
         
-        // Level themes
+        // Level themes - MORE VIBRANT
         const levels = [
             {
-                name: "City Streets",
-                background: "#1a1a2e",
-                platformColor: "#16213e",
-                obstacleColor: "#e94560",
+                name: "Crystal Caves",
+                background: "#1a0033",
+                platformColor: "#4a0080",
+                obstacleColor: "#ff00ff",
                 difficulty: 1,
+                obstacleCount: 1,
+                enemyCount: 0,
+                coinCount: 20,
+                powerupCount: 3
+            },
+            {
+                name: "Golden Desert",
+                background: "#ff8c00",
+                platformColor: "#ffa500",
+                obstacleColor: "#ff4500",
+                difficulty: 2,
                 obstacleCount: 2,
                 enemyCount: 1,
-                coinCount: 10,
-                powerupCount: 2
+                coinCount: 25,
+                powerupCount: 4
             },
             {
-                name: "Forest Path",
-                background: "#0d2818",
-                platformColor: "#1e3a2e",
-                obstacleColor: "#4a7c59",
-                difficulty: 2,
-                obstacleCount: 3,
-                enemyCount: 2,
-                coinCount: 12,
-                powerupCount: 3
-            },
-            {
-                name: "Desert Dunes",
-                background: "#3e2723",
-                platformColor: "#5d4037",
-                obstacleColor: "#ff6f00",
+                name: "Ocean Depths",
+                background: "#006994",
+                platformColor: "#0099cc",
+                obstacleColor: "#00ccff",
                 difficulty: 3,
+                obstacleCount: 3,
+                enemyCount: 1,
+                coinCount: 30,
+                powerupCount: 4
+            },
+            {
+                name: "Volcano Peak",
+                background: "#8b0000",
+                platformColor: "#dc143c",
+                obstacleColor: "#ff6347",
+                difficulty: 4,
                 obstacleCount: 4,
                 enemyCount: 2,
-                coinCount: 15,
-                powerupCount: 3
+                coinCount: 35,
+                powerupCount: 5
             },
             {
-                name: "Ice Mountains",
-                background: "#1a237e",
-                platformColor: "#283593",
-                obstacleColor: "#64b5f6",
-                difficulty: 4,
-                obstacleCount: 5,
-                enemyCount: 3,
-                coinCount: 18,
-                powerupCount: 4
-            },
-            {
-                name: "Space Station",
-                background: "#000000",
-                platformColor: "#1a1a1a",
-                obstacleColor: "#ff00ff",
+                name: "Sky Temple",
+                background: "#87ceeb",
+                platformColor: "#b0e0e6",
+                obstacleColor: "#ffffff",
                 difficulty: 5,
-                obstacleCount: 6,
-                enemyCount: 4,
-                coinCount: 20,
-                powerupCount: 4
+                obstacleCount: 5,
+                enemyCount: 2,
+                coinCount: 40,
+                powerupCount: 5
             }
         ];
         
-        // Input handling
+        // Input handling - BETTER CONTROLS
         let keys = {};
         
         // Event listeners
@@ -300,12 +336,26 @@
         
         function handleJump() {
             if (!gameStarted || gameOver || levelComplete) return;
-            if (player.onGround && !player.isSliding && player.canJump) {
-                player.velocityY = player.jumpPower;
-                player.onGround = false;
-                player.canJump = false;
-                player.jumpCooldown = 0.2;
-                createJumpParticles();
+            if (!player.isSliding) {
+                if (player.onGround && player.canJump) {
+                    // First jump
+                    let jumpPower = player.jumpPower;
+                    if (player.hasSuperJump) jumpPower *= 1.5;
+                    player.velocityY = jumpPower;
+                    player.onGround = false;
+                    player.canJump = false;
+                    player.jumpCooldown = 0.1;
+                    player.jumpCount = 1;
+                    createJumpParticles();
+                } else if (player.canDoubleJump && player.jumpCount === 1) {
+                    // Double jump
+                    let jumpPower = player.doubleJumpPower;
+                    if (player.hasSuperJump) jumpPower *= 1.3;
+                    player.velocityY = jumpPower;
+                    player.canDoubleJump = false;
+                    player.jumpCount = 2;
+                    createDoubleJumpParticles();
+                }
             }
         }
         
@@ -320,29 +370,43 @@
         }
         
         function createJumpParticles() {
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 8; i++) {
                 particles.push({
                     x: player.x + player.width/2,
                     y: player.y + player.height,
-                    vx: (Math.random() - 0.5) * 50,
-                    vy: Math.random() * -30,
-                    size: Math.random() * 3 + 2,
-                    color: '#4a9eff',
-                    life: 0.5
+                    vx: (Math.random() - 0.5) * 80,
+                    vy: Math.random() * -40,
+                    size: Math.random() * 4 + 3,
+                    color: '#00ffff',
+                    life: 0.6
+                });
+            }
+        }
+        
+        function createDoubleJumpParticles() {
+            for (let i = 0; i < 12; i++) {
+                particles.push({
+                    x: player.x + player.width/2,
+                    y: player.y + player.height/2,
+                    vx: (Math.random() - 0.5) * 120,
+                    vy: (Math.random() - 0.5) * 80,
+                    size: Math.random() * 5 + 2,
+                    color: '#ff00ff',
+                    life: 0.8
                 });
             }
         }
         
         function createSlideParticles() {
-            for (let i = 0; i < 8; i++) {
+            for (let i = 0; i < 10; i++) {
                 particles.push({
                     x: player.x,
                     y: player.y + player.height/2,
-                    vx: Math.random() * -30,
+                    vx: Math.random() * -40,
                     vy: (Math.random() - 0.5) * 20,
-                    size: Math.random() * 4 + 2,
-                    color: '#ff8800',
-                    life: 0.3
+                    size: Math.random() * 5 + 3,
+                    color: '#ffd700',
+                    life: 0.4
                 });
             }
         }
@@ -354,6 +418,8 @@
             lasers = [];
             coins = [];
             powerups = [];
+            particles = [];
+            stars = [];
             
             const levelData = levels[currentLevel];
             
@@ -368,7 +434,7 @@
             
             // Generate obstacles
             for (let i = 0; i < levelData.obstacleCount; i++) {
-                const x = 400 + i * 300;
+                const x = 400 + i * 350;
                 const y = i % 2 === 0 ? 540 : 450;
                 
                 obstacles.push({
@@ -384,38 +450,49 @@
             // Generate enemies
             for (let i = 0; i < levelData.enemyCount; i++) {
                 enemies.push({
-                    x: 600 + i * 400,
+                    x: 600 + i * 500,
                     y: 300 + i * 50,
                     width: 25,
                     height: 25,
                     color: '#ff8800',
                     shootTimer: 0,
-                    shootInterval: 4.0 - (levelData.difficulty * 0.5),
-                    laserSpeed: 100 + (levelData.difficulty * 20)
+                    shootInterval: 5.0 - (levelData.difficulty * 0.5),
+                    laserSpeed: 80 + (levelData.difficulty * 15)
                 });
             }
             
-            // Generate coins
+            // Generate lots of coins
             for (let i = 0; i < levelData.coinCount; i++) {
                 coins.push({
-                    x: 200 + i * 100,
-                    y: 350 + Math.sin(i * 0.5) * 50,
-                    radius: 12,
+                    x: 100 + i * 80,
+                    y: 300 + Math.sin(i * 0.3) * 80,
+                    radius: 15,
                     collected: false,
-                    animation: 0
+                    animation: 0,
+                    value: 10
                 });
             }
             
             // Generate power-ups
-            const powerTypes = ['shield', 'speed', 'magnet'];
+            const powerTypes = ['super_jump', 'magnet', 'shield', 'speed'];
             for (let i = 0; i < levelData.powerupCount; i++) {
                 powerups.push({
-                    x: 400 + i * 300,
-                    y: 400,
-                    radius: 18,
+                    x: 300 + i * 250,
+                    y: 350,
+                    radius: 20,
                     type: powerTypes[i % powerTypes.length],
                     collected: false,
                     animation: 0
+                });
+            }
+            
+            // Generate background stars
+            for (let i = 0; i < 50; i++) {
+                stars.push({
+                    x: Math.random() * 2000,
+                    y: Math.random() * 400,
+                    size: Math.random() * 3 + 1,
+                    twinkle: Math.random() * Math.PI * 2
                 });
             }
         }
@@ -444,6 +521,12 @@
             // Update particles
             updateParticles(delta);
             
+            // Update stars
+            updateStars(delta);
+            
+            // Update combo
+            updateCombo(delta);
+            
             // Check level completion
             if (player.x > 1800) {
                 completeLevel();
@@ -461,6 +544,8 @@
                 player.velocityY += GRAVITY * delta;
             } else {
                 player.onGround = true;
+                player.canDoubleJump = true;
+                player.jumpCount = 0;
             }
             
             // Handle jump cooldown
@@ -492,6 +577,13 @@
                 player.magnetTimer -= delta;
                 if (player.magnetTimer <= 0) {
                     player.hasMagnet = false;
+                }
+            }
+            
+            if (player.hasSuperJump) {
+                player.superJumpTimer -= delta;
+                if (player.superJumpTimer <= 0) {
+                    player.hasSuperJump = false;
                 }
             }
             
@@ -587,25 +679,37 @@
             for (let coin of coins) {
                 if (coin.collected) continue;
                 
-                coin.animation += delta * 5;
+                coin.animation += delta * 6;
                 
-                // Magnet effect
+                // Magnet effect - automatic collection
                 if (player.hasMagnet) {
                     const dx = player.x - coin.x;
                     const dy = player.y - coin.y;
                     const distance = Math.sqrt(dx * dx + dy * dy);
                     
-                    if (distance < 150) {
-                        coin.x += (dx / distance) * 200 * delta;
-                        coin.y += (dy / distance) * 200 * delta;
+                    if (distance < player.magnetRange) {
+                        coin.x += (dx / distance) * 300 * delta;
+                        coin.y += (dy / distance) * 300 * delta;
                     }
                 }
                 
+                // Easier collection - larger hitbox
                 if (checkCircleRectCollision(coin, player)) {
                     coin.collected = true;
-                    score += 10;
+                    score += coin.value;
                     scoreElement.textContent = score;
                     createCoinParticles(coin.x, coin.y);
+                    
+                    // Update combo
+                    const currentTime = Date.now();
+                    if (currentTime - lastCoinTime < 2000) {
+                        combo++;
+                        score += combo * 5; // Combo bonus
+                        updateComboDisplay();
+                    } else {
+                        combo = 1;
+                    }
+                    lastCoinTime = currentTime;
                 }
             }
         }
@@ -614,12 +718,12 @@
             for (let powerup of powerups) {
                 if (powerup.collected) continue;
                 
-                powerup.animation += delta * 3;
+                powerup.animation += delta * 4;
                 
                 if (checkCircleRectCollision(powerup, player)) {
                     powerup.collected = true;
                     activatePowerup(powerup.type);
-                    score += 50;
+                    score += 100;
                     scoreElement.textContent = score;
                 }
             }
@@ -636,7 +740,11 @@
                     break;
                 case 'magnet':
                     player.hasMagnet = true;
-                    player.magnetTimer = 6.0;
+                    player.magnetTimer = 10.0;
+                    break;
+                case 'super_jump':
+                    player.hasSuperJump = true;
+                    player.superJumpTimer = 8.0;
                     break;
             }
             updatePowerupIndicator();
@@ -646,8 +754,8 @@
             let text = '';
             if (player.hasShield) text += '🛡️ SHIELD ';
             if (player.hasSpeedBoost) text += '⚡ SPEED ';
-            if (player.hasMagnet)
-text += '🧲 MAGNET ';
+            if (player.hasMagnet) text += '🧲 MAGNET ';
+            if (player.hasSuperJump) text += '🚀 SUPER JUMP ';
             
             if (text) {
                 powerupIndicator.textContent = text;
@@ -657,16 +765,32 @@ text += '🧲 MAGNET ';
             }
         }
         
+        function updateCombo(delta) {
+            if (combo > 1) {
+                comboIndicator.classList.remove('hidden');
+                comboCountElement.textContent = combo;
+            } else {
+                comboIndicator.classList.add('hidden');
+            }
+        }
+        
+        function updateComboDisplay() {
+            comboIndicator.classList.remove('hidden');
+            comboCountElement.textContent = combo;
+        }
+        
         function createCoinParticles(x, y) {
-            for (let i = 0; i < 8; i++) {
+            for (let i = 0; i < 12; i++) {
+               
+
                 particles.push({
                     x: x,
                     y: y,
-                    vx: (Math.random() - 0.5) * 150,
+                    vx: (Math.random() - 0.5) * 200,
                     vy: (Math.random() - 0.5) * 150,
-                    size: Math.random() * 3 + 2,
+                    size: Math.random() * 4 + 2,
                     color: '#ffd700',
-                    life: 0.6
+                    life: 0.8
                 });
             }
         }
@@ -676,12 +800,18 @@ text += '🧲 MAGNET ';
                 const particle = particles[i];
                 particle.x += particle.vx * delta;
                 particle.y += particle.vy * delta;
-                particle.vy += 150 * delta; // Gravity
+                particle.vy += 200 * delta; // Gravity
                 particle.life -= delta;
                 
                 if (particle.life <= 0) {
                     particles.splice(i, 1);
                 }
+            }
+        }
+        
+        function updateStars(delta) {
+            for (let star of stars) {
+                star.twinkle += delta * 3;
             }
         }
         
@@ -696,7 +826,7 @@ text += '🧲 MAGNET ';
             const closestX = Math.max(rect.x, Math.min(circle.x, rect.x + rect.width));
             const closestY = Math.max(rect.y, Math.min(circle.y, rect.y + rect.height));
             const distance = Math.sqrt((circle.x - closestX) ** 2 + (circle.y - closestY) ** 2);
-            return distance < circle.radius;
+            return distance < circle.radius + 10; // Larger hitbox for easier collection
         }
         
         function render() {
@@ -708,31 +838,47 @@ text += '🧲 MAGNET ';
             ctx.save();
             ctx.translate(-cameraX, 0);
             
-            // Draw platforms
+            // Draw background stars
+            for (let star of stars) {
+                const brightness = Math.sin(star.twinkle) * 0.5 + 0.5;
+                ctx.fillStyle = `rgba(255, 255, 255, ${brightness})`;
+                ctx.fillRect(star.x, star.y, star.size, star.size);
+            }
+            
+            // Draw platforms with glow
             for (let platform of platforms) {
+                // Platform glow
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = levelData.platformColor;
+                
                 ctx.fillStyle = platform.color;
                 ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
                 
                 // Add edge highlight
                 ctx.strokeStyle = '#ffffff';
-                ctx.lineWidth = 2;
+                ctx.lineWidth = 3;
                 ctx.strokeRect(platform.x, platform.y, platform.width, platform.height);
+                ctx.shadowBlur = 0;
             }
             
-            // Draw obstacles
+            // Draw obstacles with warning glow
             for (let obstacle of obstacles) {
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = obstacle.color;
+                
                 ctx.fillStyle = obstacle.color;
                 ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
                 
                 // Add warning stripes
                 ctx.strokeStyle = '#ffff00';
-                ctx.lineWidth = 2;
-                ctx.setLineDash([5, 5]);
+                ctx.lineWidth = 3;
+                ctx.setLineDash([8, 8]);
                 ctx.strokeRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
                 ctx.setLineDash([]);
+                ctx.shadowBlur = 0;
             }
             
-            // Draw coins
+            // Draw coins with enhanced effects
             for (let coin of coins) {
                 if (coin.collected) continue;
                 
@@ -741,7 +887,7 @@ text += '🧲 MAGNET ';
                 ctx.rotate(coin.animation);
                 
                 // Coin glow
-                ctx.shadowBlur = 15;
+                ctx.shadowBlur = 25;
                 ctx.shadowColor = '#ffd700';
                 
                 // Coin body
@@ -753,19 +899,26 @@ text += '🧲 MAGNET ';
                 // Coin highlight
                 ctx.fillStyle = '#ffed4e';
                 ctx.beginPath();
-                ctx.arc(-2, -2, coin.radius * 0.7, 0, Math.PI * 2);
+                ctx.arc(-3, -3, coin.radius * 0.7, 0, Math.PI * 2);
                 ctx.fill();
+                
+                // Coin center
+                ctx.fillStyle = '#ffaa00';
+                ctx.font = 'bold 12px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('$', 0, 0);
                 
                 ctx.restore();
             }
             
-            // Draw power-ups
+            // Draw power-ups with enhanced effects
             for (let powerup of powerups) {
                 if (powerup.collected) continue;
                 
                 ctx.save();
                 ctx.translate(powerup.x, powerup.y);
-                ctx.scale(1 + Math.sin(powerup.animation) * 0.1, 1 + Math.sin(powerup.animation) * 0.1);
+                ctx.scale(1 + Math.sin(powerup.animation) * 0.15, 1 + Math.sin(powerup.animation) * 0.15);
                 
                 // Power-up glow and color based on type
                 let color, icon;
@@ -782,9 +935,13 @@ text += '🧲 MAGNET ';
                         color = '#ff00ff';
                         icon = '🧲';
                         break;
+                    case 'super_jump':
+                        color = '#00ff00';
+                        icon = '🚀';
+                        break;
                 }
                 
-                ctx.shadowBlur = 20;
+                ctx.shadowBlur = 30;
                 ctx.shadowColor = color;
                 
                 // Power-up body
@@ -793,9 +950,16 @@ text += '🧲 MAGNET ';
                 ctx.arc(0, 0, powerup.radius, 0, Math.PI * 2);
                 ctx.fill();
                 
+                // Power-up ring
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(0, 0, powerup.radius + 5, 0, Math.PI * 2);
+                ctx.stroke();
+                
                 // Power-up icon
                 ctx.fillStyle = '#ffffff';
-                ctx.font = '16px Arial';
+                ctx.font = 'bold 18px Arial';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.fillText(icon, 0, 0);
@@ -808,7 +972,7 @@ text += '🧲 MAGNET ';
                 ctx.fillStyle = enemy.color;
                 ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
                 
-                // Enemy eye
+                // Enemy eyes
                 ctx.fillStyle = '#ffffff';
                 ctx.fillRect(enemy.x + 5, enemy.y + 5, 6, 6);
                 ctx.fillStyle = '#ff0000';
@@ -822,7 +986,7 @@ text += '🧲 MAGNET ';
                 ctx.rotate(Math.atan2(laser.vy, laser.vx));
                 
                 // Laser glow
-                ctx.shadowBlur = 10;
+                ctx.shadowBlur = 15;
                 ctx.shadowColor = '#ff0000';
                 
                 // Laser body
@@ -840,32 +1004,32 @@ text += '🧲 MAGNET ';
             }
             ctx.globalAlpha = 1;
             
-            // Draw character player
+            // Draw enhanced character player
             ctx.save();
             
             // Player shadow
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-            ctx.ellipse(player.x + player.width/2, player.y + player.height + 5, 
-                       player.width/2, 5, 0, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+            ctx.ellipse(player.x + player.width/2, player.y + player.height + 8, 
+                       player.width/2 + 5, 8, 0, 0, Math.PI * 2);
             ctx.fill();
             
             // Shield effect
             if (player.hasShield) {
                 ctx.strokeStyle = '#00ffff';
-                ctx.lineWidth = 3;
-                ctx.shadowBlur = 15;
+                ctx.lineWidth = 4;
+                ctx.shadowBlur = 20;
                 ctx.shadowColor = '#00ffff';
-                ctx.strokeRect(player.x - 5, player.y - 5, player.width + 10, player.height + 10);
+                ctx.strokeRect(player.x - 8, player.y - 8, player.width + 16, player.height + 16);
                 ctx.shadowBlur = 0;
             }
             
             // Speed boost effect
             if (player.hasSpeedBoost) {
                 ctx.strokeStyle = '#ffff00';
-                ctx.lineWidth = 2;
-                ctx.shadowBlur = 10;
+                ctx.lineWidth = 3;
+                ctx.shadowBlur = 15;
                 ctx.shadowColor = '#ffff00';
-                ctx.strokeRect(player.x - 3, player.y - 3, player.width + 6, player.height + 6);
+                ctx.strokeRect(player.x - 5, player.y - 5, player.width + 10, player.height + 10);
                 ctx.shadowBlur = 0;
             }
             
@@ -873,41 +1037,64 @@ text += '🧲 MAGNET ';
             if (player.hasMagnet) {
                 ctx.strokeStyle = '#ff00ff';
                 ctx.lineWidth = 2;
-                ctx.setLineDash([5, 5]);
-                ctx.strokeRect(player.x - 20, player.y - 20, player.width + 40, player.height + 40);
+                ctx.setLineDash([8, 8]);
+                ctx.strokeRect(player.x - 25, player.y - 25, player.width + 50, player.height + 50);
                 ctx.setLineDash([]);
             }
             
-            // Draw character as a person
+            // Super jump effect
+            if (player.hasSuperJump) {
+                ctx.strokeStyle = '#00ff00';
+                ctx.lineWidth = 3;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = '#00ff00';
+                ctx.strokeRect(player.x - 6, player.y - 6, player.width + 12, player.height + 12);
+                ctx.shadowBlur = 0;
+            }
+            
+            // Draw character as a more detailed person
             const charX = player.x + player.width/2;
             const charY = player.y + player.height/2;
             
-            // Legs
-            ctx.fillStyle = '#004080';
+            // Legs with animation
+            ctx.fillStyle = '#4a0080';
             const legY = player.isSliding ? charY + 5 : charY + 20;
-            ctx.fillRect(charX - 7, legY, 14, 10);
+            const legWidth = player.isSliding ? 20 : 16;
+            ctx.fillRect(charX - legWidth/2, legY, legWidth, 12);
             
-            // Body
-            ctx.fillStyle = '#0080ff';
+            // Body with gradient effect
+            const bodyGradient = ctx.createLinearGradient(charX - 12, charY - 10, charX + 12, charY + 10);
+            bodyGradient.addColorStop(0, '#00ffff');
+            bodyGradient.addColorStop(1, '#0080ff');
+            ctx.fillStyle = bodyGradient;
             const bodyY = player.isSliding ? charY + 5 : charY;
-            ctx.fillRect(charX - 10, bodyY, 20, 15);
+            ctx.fillRect(charX - 12, bodyY, 24, 18);
             
-            // Head
+            // Head with glow
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#ffffff';
             ctx.fillStyle = '#ffffff';
             const headY = player.isSliding ? charY - 5 : charY - 20;
             ctx.beginPath();
-            ctx.arc(charX, headY, 12, 0, Math.PI * 2);
+            ctx.arc(charX, headY, 14, 0, Math.PI * 2);
             ctx.fill();
+            ctx.shadowBlur = 0;
             
             // Face details
             ctx.fillStyle = '#000000';
             // Eyes
-            ctx.fillRect(charX - 4, headY - 3, 2, 2);
-            ctx.fillRect(charX + 2, headY - 3, 2, 2);
+            ctx.fillRect(charX - 5, headY - 4, 3, 3);
+            ctx.fillRect(charX + 2, headY - 4, 3, 3);
             // Smile
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.arc(charX, headY + 2, 3, 0, Math.PI);
+            ctx.arc(charX, headY + 3, 4, 0, Math.PI);
             ctx.stroke();
+            
+            // Hair
+            ctx.fillStyle = '#4a0080';
+            ctx.fillRect(charX - 8, headY - 18, 16, 6);
             
             ctx.restore();
             
@@ -919,7 +1106,7 @@ text += '🧲 MAGNET ';
             levelsCompleted++;
             
             // Bonus points for completing level
-            score += 100 * (currentLevel + 1);
+            score += 200 * (currentLevel + 1);
             scoreElement.textContent = score;
             
             levelScoreElement.textContent = score;
@@ -942,16 +1129,21 @@ text += '🧲 MAGNET ';
                 player.hasShield = false;
                 player.hasSpeedBoost = false;
                 player.hasMagnet = false;
+                player.hasSuperJump = false;
                 player.isSliding = false;
                 player.height = 50;
                 player.canJump = true;
+                player.canDoubleJump = true;
                 player.jumpCooldown = 0;
+                player.jumpCount = 0;
+                combo = 0;
                 
                 // Update UI
                 levelElement.textContent = levels[currentLevel].name;
                 progressElement.textContent = `${currentLevel + 1}/5`;
                 levelCompleteScreen.classList.add('hidden');
                 powerupIndicator.classList.add('hidden');
+                comboIndicator.classList.add('hidden');
                 
                 // Initialize new level
                 initializeLevel();
@@ -966,6 +1158,7 @@ text += '🧲 MAGNET ';
             currentLevel = 0;
             levelsCompleted = 0;
             cameraX = 0;
+            combo = 0;
             
             // Reset player
             player.x = 200;
@@ -975,10 +1168,13 @@ text += '🧲 MAGNET ';
             player.hasShield = false;
             player.hasSpeedBoost = false;
             player.hasMagnet = false;
+            player.hasSuperJump = false;
             player.isSliding = false;
             player.height = 50;
             player.canJump = true;
+            player.canDoubleJump = true;
             player.jumpCooldown = 0;
+            player.jumpCount = 0;
             
             // Update UI
             scoreElement.textContent = score;
@@ -988,6 +1184,7 @@ text += '🧲 MAGNET ';
             gameOverScreen.classList.add('hidden');
             levelCompleteScreen.classList.add('hidden');
             powerupIndicator.classList.add('hidden');
+            comboIndicator.classList.add('hidden');
             
             initializeLevel();
         }
