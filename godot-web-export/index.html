@@ -493,8 +493,7 @@
             }
         }
         
-        function updatePowerups(delta
- {
+        function updatePowerups(delta) {
             for (let powerup of powerups) {
                 if (powerup.collected) continue;
                 
@@ -674,7 +673,8 @@
                 ctx.rotate(Math.atan2(laser.vy, laser.vx));
                 
                 // Laser glow
-                ctx.shadowBlur = 10;
+                ctx
+.shadowBlur = 10;
                 ctx.shadowColor = '#ff0000';
                 
                 // Laser body

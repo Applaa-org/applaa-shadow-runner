@@ -1,9 +1,9 @@
 extends CharacterBody2D
 
-const SPEED = 100.0
-const JUMP_VELOCITY = -250.0
-const SLIDE_DURATION = 1.0
-const GRAVITY = 400.0
+const SPEED = 100.0  # Much slower speed
+const JUMP_VELOCITY = -250.0  # Lower jump
+const SLIDE_DURATION = 1.0  # Longer slide
+const GRAVITY = 400.0  # Much lower gravity
 
 @onready var sprite = $Sprite2D
 @onready var collision_shape = $CollisionShape2D
@@ -13,17 +13,17 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var is_sliding = false
 var slide_timer = 0.0
 var has_shield = false
-var on_ground = false
+var is_jumping = false
 
 func _ready():
 	slide_collision.disabled = true
 
 func _physics_process(delta):
-	# Apply gravity
+	# Apply gravity (much gentler)
 	if not is_on_floor():
 		velocity.y += gravity * delta
 	else:
-		on_ground = true
+		is_jumping = false
 	
 	# Handle slide
 	if is_sliding:
@@ -32,9 +32,9 @@ func _physics_process(delta):
 			stop_slide()
 	
 	# Handle jump - ONLY SPACEBAR
-	if Input.is_action_just_pressed("ui_accept") and is_on_floor() and not is_sliding:
+	if Input.is_action_just_pressed("jump") and is_on_floor() and not is_sliding:
 		velocity.y = JUMP_VELOCITY
-		on_ground = false
+		is_jumping = true
 		$JumpSound.play()
 	
 	# Handle slide
@@ -52,7 +52,7 @@ func start_slide():
 	slide_timer = SLIDE_DURATION
 	sprite.scale.y = 0.5
 	collision_shape.disabled = true
-	slide_collision.disabled = false
+	slide_collision.disabled = true
 	$SlideSound.play()
 
 func stop_slide():
