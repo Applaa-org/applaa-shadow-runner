@@ -116,7 +116,7 @@
 <body>
     <div id="gameContainer">
         <h1>🏃 Shadow Runner - Easy Mode</h1>
-        <div class="info">Simple and fun runner game</div>
+        <div class="info">Very easy and slow runner game</div>
         <canvas id="gameCanvas" width="1280" height="720"></canvas>
         <div class="score">Score: <span id="score">0</span></div>
         <div class="level">Level: <span id="level">Easy City</span></div>
@@ -126,8 +126,8 @@
         </div>
         
         <div class="start-screen" id="startScreen">
-            <h2>SHADOW RUNNER</h2>
-            <p>EASY MODE - Perfect for beginners!</p>
+            <h2>SHADOW RUNNER - EASY MODE</h2>
+            <p>Very slow and easy runner game</p>
             <p>Press SPACEBAR to jump over obstacles</p>
             <p>Press DOWN ARROW to slide under barriers</p>
             <button class="btn" onclick="startGame()">START GAME</button>
@@ -150,7 +150,7 @@
         const finalScoreElement = document.getElementById('finalScore');
         const powerupIndicator = document.getElementById('powerupIndicator');
         
-        // Game state - SLOWER AND EASIER
+        // Game state - VERY SLOW AND EASY
         let gameStarted = false;
         let gameOver = false;
         let score = 0;
@@ -161,10 +161,10 @@
         
         const canvasWidth = 1280;
         const canvasHeight = 720;
-        const GRAVITY = 600;  // Much lower gravity
-        const AUTO_RUN_SPEED = 150;  // Much slower speed
+        const GRAVITY = 400;  // Much lower gravity
+        const AUTO_RUN_SPEED = 100;  // Very slow speed
         
-        // Player state - EASIER CONTROLS
+        // Player state - EASY CONTROLS
         let player = {
             x: 200,
             y: 400,
@@ -173,7 +173,7 @@
             velocityX: 0,
             velocityY: 0,
             speed: AUTO_RUN_SPEED,
-            jumpPower: -300,  // Lower jump
+            jumpPower: -250,  // Lower jump
             onGround: false,
             isSliding: false,
             slideTimer: 0,
@@ -394,7 +394,7 @@
                 }
             }
             
-            // Automatic running (slower)
+            // Automatic running (very slow)
             player.velocityX = player.speed;
             
             // Update position
@@ -444,8 +444,8 @@
             lasers.push({
                 x: enemy.x,
                 y: enemy.y,
-                vx: (dx / distance) * 200,  // Slower lasers
-                vy: (dy / distance) * 200,
+                vx: (dx / distance) * 150,  // Slower lasers
+                vy: (dy / distance) * 150,
                 width: 20,
                 height: 5,
                 color: '#ff0000'
@@ -493,7 +493,8 @@
             }
         }
         
-        function updatePowerups(delta) {
+        function updatePowerups(delta
+ {
             for (let powerup of powerups) {
                 if (powerup.collected) continue;
                 
@@ -518,10 +519,7 @@
                 case 'slowmo':
                     slowmoActive = true;
                     slowmoTimer = 5.0;
-                    powerupIndicator.textContent = '⏱️ S
-
-
-LOW MOTION';
+                    powerupIndicator.textContent = '⏱️ SLOW MOTION';
                     powerupIndicator.classList.remove('hidden');
                     break;
             }

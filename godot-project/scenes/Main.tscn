@@ -31,7 +31,7 @@ anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = 20.0
-offset_top = -100.0
+offset_top = -120.0
 offset_right = 400.0
 offset_bottom = -20.0
 
@@ -58,6 +58,18 @@ offset_right = 200.0
 offset_bottom = -50.0
 theme = SubResource("Theme_1")
 text = "Level: Easy City"
+
+[node name="ControlsLabel" type="Label" parent="UI/GameUI"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -110.0
+offset_right = 400.0
+offset_bottom = -80.0
+theme = SubResource("Theme_1")
+text = "SPACEBAR = JUMP | DOWN ARROW = SLIDE"
 
 [node name="StartScreen" type="Control" parent="UI"]
 layout_mode = 3
@@ -91,6 +103,12 @@ text = "SHADOW RUNNER - EASY MODE"
 horizontal_alignment = 1
 
 [node name="InstructionsLabel" type="Label" parent="UI/StartScreen/VBoxContainer"]
+layout_mode = 2
+theme = SubResource("Theme_1")
+text = "Very easy and slow runner game"
+horizontal_alignment = 1
+
+[node name="ControlsLabel" type="Label" parent="UI/StartScreen/VBoxContainer"]
 layout_mode = 2
 theme = SubResource("Theme_1")
 text = "SPACEBAR = JUMP | DOWN ARROW = SLIDE"

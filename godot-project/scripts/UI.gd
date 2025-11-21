@@ -4,6 +4,7 @@ extends CanvasLayer
 @onready var game_over_screen = $GameOverScreen
 @onready var score_label = $GameUI/ScoreLabel
 @onready var level_label = $GameUI/LevelLabel
+@onready var controls_label = $GameUI/ControlsLabel
 @onready var start_button = $StartScreen/StartButton
 @onready var restart_button = $GameOverScreen/RestartButton
 @onready var final_score_label = $GameOverScreen/FinalScoreLabel
@@ -15,6 +16,9 @@ func _ready():
 	# Show start screen initially
 	start_screen.visible = true
 	game_over_screen.visible = false
+	
+	# Show simple controls
+	controls_label.text = "SPACEBAR = JUMP | DOWN ARROW = SLIDE"
 
 func hide_start_screen():
 	start_screen.visible = false

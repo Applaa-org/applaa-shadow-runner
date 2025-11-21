@@ -1,8 +1,8 @@
 extends Node2D
 
-@export var shoot_interval = 4.0  # Much slower
-@export var laser_speed = 200.0   # Much slower
-@export var detection_range = 200.0
+@export var shoot_interval = 4.0  # Much slower shooting
+@export var laser_speed = 150.0  # Much slower lasers
+@export var detection_range = 200.0  # Shorter range
 
 @onready var sprite = $Sprite2D
 @onready var shoot_timer = $ShootTimer

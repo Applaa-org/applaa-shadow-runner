@@ -2,7 +2,7 @@
   "game": {
     "name": "Shadow Runner - Easy Mode",
     "type": "2D",
-    "description": "A simple and easy 2D side-scrolling runner with slow pace and simple controls.",
+    "description": "A very easy and slow 2D side-scrolling runner with simple spacebar controls.",
     "genre": "action",
     "version": "1.0.0"
   },
@@ -19,10 +19,12 @@
     "rendering": {}
   },
   "player": {
-    "speed": 150,
-    "jumpVelocity": -300,
+    "speed": 100,
+    "jumpVelocity": -250,
     "slideDuration": 1.0,
-    "health": 100
+    "health": 100,
+    "doubleJump": false,
+    "wallJump": false
   },
   "controls": {
     "jump": ["Space"],
