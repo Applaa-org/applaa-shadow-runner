@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Shadow Runner - Super Easy</title>
+    <title>Shadow Runner - Multi Level</title>
     <meta charset="UTF-8">
     <style>
         * {
@@ -14,7 +14,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #2a2a3e 0%, #3a3a4e 50%, #4a4a5e 100%);
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #ffffff;
             overflow: hidden;
@@ -25,19 +25,19 @@
             position: relative;
         }
         #gameCanvas {
-            border: 2px solid #6bb6ff;
+            border: 2px solid #4a9eff;
             border-radius: 8px;
-            background: #2a2a3e;
-            box-shadow: 0 4px 30px rgba(107, 182, 255, 0.4);
+            background: #1a1a2e;
+            box-shadow: 0 4px 30px rgba(74, 158, 255, 0.4);
             display: block;
             margin: 20px auto;
             cursor: pointer;
         }
         h1 {
-            color: #6bb6ff;
+            color: #4a9eff;
             margin-bottom: 10px;
             font-size: 32px;
-            text-shadow: 0 0 20px rgba(107, 182, 255, 0.5);
+            text-shadow: 0 0 20px rgba(74, 158, 255, 0.5);
         }
         .info {
             color: #cccccc;
@@ -47,7 +47,7 @@
         .controls {
             margin-top: 15px;
             color: #4ade80;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
         }
         .score {
@@ -70,7 +70,7 @@
             font-size: 16px;
             font-weight: bold;
         }
-        .start-screen, .game-over-screen {
+        .start-screen, .game-over-screen, .level-complete-screen {
             position: absolute;
             top: 0;
             left: 0;
@@ -83,18 +83,18 @@
             align-items: center;
             border-radius: 8px;
         }
-        .start-screen h2, .game-over-screen h2 {
-            color: #6bb6ff;
+        .start-screen h2, .game-over-screen h2, .level-complete-screen h2 {
+            color: #4a9eff;
             font-size: 36px;
             margin-bottom: 20px;
         }
-        .start-screen p, .game-over-screen p {
+        .start-screen p, .game-over-screen p, .level-complete-screen p {
             color: #cccccc;
             font-size: 18px;
             margin-bottom: 30px;
         }
         .btn {
-            background: linear-gradient(45deg, #6bb6ff, #8cc8ff);
+            background: linear-gradient(45deg, #4a9eff, #6bb6ff);
             color: white;
             border: none;
             padding: 15px 40px;
@@ -102,40 +102,55 @@
             border-radius: 25px;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(107, 182, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(74, 158, 255, 0.3);
+            margin: 5px;
         }
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(107, 182, 255, 0.5);
+            box-shadow: 0 6px 20px rgba(74, 158, 255, 0.5);
         }
         .hidden {
             display: none !important;
+        }
+        .level-progress {
+            color: #fbbf24;
+            font-size: 16px;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <div id="gameContainer">
-        <h1>🏃 Shadow Runner - Super Easy</h1>
-        <div class="info">Extremely easy runner game with character</div>
+        <h1>🏃 Shadow Runner - Multi Level</h1>
+        <div class="info">Multi-level runner with different themes</div>
         <canvas id="gameCanvas" width="1280" height="720"></canvas>
         <div class="score">Score: <span id="score">0</span></div>
-        <div class="level">Level: <span id="level">Easy Street</span></div>
+        <div class="level">Level: <span id="level">City Streets</span></div>
+        <div class="level-progress">Progress: <span id="progress">1/5</span></div>
         <div class="powerup-indicator hidden" id="powerupIndicator"></div>
         <div class="controls">
             🎮 SPACEBAR = JUMP | DOWN ARROW = SLIDE
         </div>
         
         <div class="start-screen" id="startScreen">
-            <h2>SHADOW RUNNER - SUPER EASY</h2>
-            <p>Extremely easy runner game</p>
-            <p>Press SPACEBAR to jump over obstacles</p>
-            <p>Press DOWN ARROW to slide under barriers</p>
+            <h2>SHADOW RUNNER - MULTI LEVEL</h2>
+            <p>Run through 5 different themed levels!</p>
+            <p>City → Forest → Desert → Ice → Space</p>
+            <p>Press SPACEBAR to jump, DOWN ARROW to slide</p>
             <button class="btn" onclick="startGame()">START GAME</button>
+        </div>
+        
+        <div class="level-complete-screen hidden" id="levelCompleteScreen">
+            <h2>LEVEL COMPLETE!</h2>
+            <p>Score: <span id="levelScore">0</span></p>
+            <p>Ready for the next challenge?</p>
+            <button class="btn" onclick="nextLevel()">NEXT LEVEL</button>
         </div>
         
         <div class="game-over-screen hidden" id="gameOverScreen">
             <h2>GAME OVER</h2>
             <p>Final Score: <span id="finalScore">0</span></p>
+            <p>Levels Completed: <span id="levelsCompleted">0</span></p>
             <button class="btn" onclick="restartGame()">PLAY AGAIN</button>
         </div>
     </div>
@@ -145,24 +160,30 @@
         const ctx = canvas.getContext('2d');
         const scoreElement = document.getElementById('score');
         const levelElement = document.getElementById('level');
+        const progressElement = document.getElementById('progress');
         const startScreen = document.getElementById('startScreen');
+        const levelCompleteScreen = document.getElementById('levelCompleteScreen');
         const gameOverScreen = document.getElementById('gameOverScreen');
         const finalScoreElement = document.getElementById('finalScore');
+        const levelsCompletedElement = document.getElementById('levelsCompleted');
+        const levelScoreElement = document.getElementById('levelScore');
         const powerupIndicator = document.getElementById('powerupIndicator');
         
-        // Game state - SUPER EASY
+        // Game state
         let gameStarted = false;
         let gameOver = false;
         let score = 0;
         let currentLevel = 0;
+        let levelsCompleted = 0;
         let cameraX = 0;
+        let levelComplete = false;
         
         const canvasWidth = 1280;
         const canvasHeight = 720;
-        const GRAVITY = 300;  // Very low gravity
-        const AUTO_RUN_SPEED = 80;  // Very slow speed
+        const GRAVITY = 400;
+        const AUTO_RUN_SPEED = 100;
         
-        // Player state - CHARACTER APPEARANCE
+        // Player state
         let player = {
             x: 200,
             y: 400,
@@ -171,18 +192,21 @@
             velocityX: 0,
             velocityY: 0,
             speed: AUTO_RUN_SPEED,
-            jumpPower: -200,  // Easy jump
+            jumpPower: -250,
             onGround: false,
             isSliding: false,
             slideTimer: 0,
-            slideDuration: 1.5,  // Long slide
+            slideDuration: 1.2,
             hasShield: false,
+            hasSpeedBoost: false,
+            hasMagnet: false,
             canJump: true,
             jumpCooldown: 0,
-            color: '#6bb6ff'
+            speedBoostTimer: 0,
+            magnetTimer: 0
         };
         
-        // Game objects - VERY FEW OBSTACLES
+        // Game objects
         let platforms = [];
         let obstacles = [];
         let enemies = [];
@@ -191,28 +215,78 @@
         let powerups = [];
         let particles = [];
         
-        // Input handling - SIMPLE CONTROLS
+        // Level themes
+        const levels = [
+            {
+                name: "City Streets",
+                background: "#1a1a2e",
+                platformColor: "#16213e",
+                obstacleColor: "#e94560",
+                difficulty: 1,
+                obstacleCount: 2,
+                enemyCount: 1,
+                coinCount: 10,
+                powerupCount: 2
+            },
+            {
+                name: "Forest Path",
+                background: "#0d2818",
+                platformColor: "#1e3a2e",
+                obstacleColor: "#4a7c59",
+                difficulty: 2,
+                obstacleCount: 3,
+                enemyCount: 2,
+                coinCount: 12,
+                powerupCount: 3
+            },
+            {
+                name: "Desert Dunes",
+                background: "#3e2723",
+                platformColor: "#5d4037",
+                obstacleColor: "#ff6f00",
+                difficulty: 3,
+                obstacleCount: 4,
+                enemyCount: 2,
+                coinCount: 15,
+                powerupCount: 3
+            },
+            {
+                name: "Ice Mountains",
+                background: "#1a237e",
+                platformColor: "#283593",
+                obstacleColor: "#64b5f6",
+                difficulty: 4,
+                obstacleCount: 5,
+                enemyCount: 3,
+                coinCount: 18,
+                powerupCount: 4
+            },
+            {
+                name: "Space Station",
+                background: "#000000",
+                platformColor: "#1a1a1a",
+                obstacleColor: "#ff00ff",
+                difficulty: 5,
+                obstacleCount: 6,
+                enemyCount: 4,
+                coinCount: 20,
+                powerupCount: 4
+            }
+        ];
+        
+        // Input handling
         let keys = {};
         
-        // Level theme
-        const level = {
-            name: "Easy Street",
-            background: "#2a2a3e",
-            platformColor: "#3a3a4e"
-        };
-        
-        // Event listeners - SIMPLE INPUTS
+        // Event listeners
         window.addEventListener('keydown', (e) => {
             keys[e.key.toLowerCase()] = true;
             keys[e.code] = true;
             
-            // Handle jump with spacebar
             if (e.key === ' ') {
                 e.preventDefault();
                 handleJump();
             }
             
-            // Handle slide
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
                 handleSlide();
@@ -225,7 +299,7 @@
         });
         
         function handleJump() {
-            if (!gameStarted || gameOver) return;
+            if (!gameStarted || gameOver || levelComplete) return;
             if (player.onGround && !player.isSliding && player.canJump) {
                 player.velocityY = player.jumpPower;
                 player.onGround = false;
@@ -236,7 +310,7 @@
         }
         
         function handleSlide() {
-            if (!gameStarted || gameOver) return;
+            if (!gameStarted || gameOver || levelComplete) return;
             if (player.onGround && !player.isSliding) {
                 player.isSliding = true;
                 player.slideTimer = player.slideDuration;
@@ -250,10 +324,10 @@
                 particles.push({
                     x: player.x + player.width/2,
                     y: player.y + player.height,
-                    vx: (Math.random() - 0.5) * 30,
-                    vy: Math.random() * -20,
+                    vx: (Math.random() - 0.5) * 50,
+                    vy: Math.random() * -30,
                     size: Math.random() * 3 + 2,
-                    color: '#6bb6ff',
+                    color: '#4a9eff',
                     life: 0.5
                 });
             }
@@ -264,8 +338,8 @@
                 particles.push({
                     x: player.x,
                     y: player.y + player.height/2,
-                    vx: Math.random() * -20,
-                    vy: (Math.random() - 0.5) * 15,
+                    vx: Math.random() * -30,
+                    vy: (Math.random() - 0.5) * 20,
                     size: Math.random() * 4 + 2,
                     color: '#ff8800',
                     life: 0.3
@@ -281,58 +355,65 @@
             coins = [];
             powerups = [];
             
+            const levelData = levels[currentLevel];
+            
             // Generate ground platform
             platforms.push({
                 x: 0,
                 y: 600,
-                width: 1000,  // Very short level
+                width: 2000,
                 height: 120,
-                color: level.platformColor
+                color: levelData.platformColor
             });
             
-            // Generate almost no obstacles
-            for (let i = 0; i < 1; i++) {  // Only 1 obstacle
+            // Generate obstacles
+            for (let i = 0; i < levelData.obstacleCount; i++) {
+                const x = 400 + i * 300;
+                const y = i % 2 === 0 ? 540 : 450;
+                
                 obstacles.push({
-                    x: 500,
-                    y: 540,
+                    x: x,
+                    y: y,
                     width: 30,
-                    height: 20,  // Only low barriers
-                    color: '#ff6b6b',
-                    type: 'low_barrier'
+                    height: 20,
+                    color: levelData.obstacleColor,
+                    type: i % 2 === 0 ? 'low_barrier' : 'high_barrier'
                 });
             }
             
-            // Generate almost no enemies
-            for (let i = 0; i < 1; i++) {  // Only 1 enemy
+            // Generate enemies
+            for (let i = 0; i < levelData.enemyCount; i++) {
                 enemies.push({
-                    x: 700,
-                    y: 300,
+                    x: 600 + i * 400,
+                    y: 300 + i * 50,
                     width: 25,
                     height: 25,
                     color: '#ff8800',
                     shootTimer: 0,
-                    shootInterval: 8.0  // Extremely slow shooting
+                    shootInterval: 4.0 - (levelData.difficulty * 0.5),
+                    laserSpeed: 100 + (levelData.difficulty * 20)
                 });
             }
             
-            // Generate lots of coins
-            for (let i = 0; i < 15; i++) {
+            // Generate coins
+            for (let i = 0; i < levelData.coinCount; i++) {
                 coins.push({
-                    x: 100 + i * 60,
-                    y: 350,
+                    x: 200 + i * 100,
+                    y: 350 + Math.sin(i * 0.5) * 50,
                     radius: 12,
                     collected: false,
                     animation: 0
                 });
             }
             
-            // Generate lots of power-ups
-            for (let i = 0; i < 5; i++) {
+            // Generate power-ups
+            const powerTypes = ['shield', 'speed', 'magnet'];
+            for (let i = 0; i < levelData.powerupCount; i++) {
                 powerups.push({
-                    x: 200 + i * 150,
+                    x: 400 + i * 300,
                     y: 400,
                     radius: 18,
-                    type: 'shield',
+                    type: powerTypes[i % powerTypes.length],
                     collected: false,
                     animation: 0
                 });
@@ -340,7 +421,7 @@
         }
         
         function update(delta) {
-            if (!gameStarted || gameOver) return;
+            if (!gameStarted || gameOver || levelComplete) return;
             
             // Update player
             updatePlayer(delta);
@@ -363,14 +444,14 @@
             // Update particles
             updateParticles(delta);
             
+            // Check level completion
+            if (player.x > 1800) {
+                completeLevel();
+            }
+            
             // Check game over
             if (player.y > canvasHeight) {
                 endGame();
-            }
-            
-            // Level progression (very short distance)
-            if (player.x > 900) {
-                nextLevel();
             }
         }
         
@@ -399,8 +480,27 @@
                 }
             }
             
-            // Automatic running (very slow)
-            player.velocityX = player.speed;
+            // Handle power-up timers
+            if (player.hasSpeedBoost) {
+                player.speedBoostTimer -= delta;
+                if (player.speedBoostTimer <= 0) {
+                    player.hasSpeedBoost = false;
+                }
+            }
+            
+            if (player.hasMagnet) {
+                player.magnetTimer -= delta;
+                if (player.magnetTimer <= 0) {
+                    player.hasMagnet = false;
+                }
+            }
+            
+            // Automatic running with speed boost
+            let currentSpeed = AUTO_RUN_SPEED;
+            if (player.hasSpeedBoost) {
+                currentSpeed *= 1.5;
+            }
+            player.velocityX = currentSpeed;
             
             // Update position
             player.x += player.velocityX * delta;
@@ -423,7 +523,7 @@
                 if (checkCollision(player, obstacle)) {
                     if (player.hasShield) {
                         player.hasShield = false;
-                        powerupIndicator.classList.add('hidden');
+                        updatePowerupIndicator();
                     } else {
                         endGame();
                     }
@@ -449,8 +549,8 @@
             lasers.push({
                 x: enemy.x,
                 y: enemy.y,
-                vx: (dx / distance) * 80,  // Extremely slow lasers
-                vy: (dy / distance) * 80,
+                vx: (dx / distance) * enemy.laserSpeed,
+                vy: (dy / distance) * enemy.laserSpeed,
                 width: 15,
                 height: 4,
                 color: '#ff0000'
@@ -467,7 +567,7 @@
                 if (checkCollision(laser, player)) {
                     if (player.hasShield) {
                         player.hasShield = false;
-                        powerupIndicator.classList.add('hidden');
+                        updatePowerupIndicator();
                     } else {
                         endGame();
                     }
@@ -488,6 +588,18 @@
                 if (coin.collected) continue;
                 
                 coin.animation += delta * 5;
+                
+                // Magnet effect
+                if (player.hasMagnet) {
+                    const dx = player.x - coin.x;
+                    const dy = player.y - coin.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 150) {
+                        coin.x += (dx / distance) * 200 * delta;
+                        coin.y += (dy / distance) * 200 * delta;
+                    }
+                }
                 
                 if (checkCircleRectCollision(coin, player)) {
                     coin.collected = true;
@@ -517,9 +629,31 @@
             switch(type) {
                 case 'shield':
                     player.hasShield = true;
-                    powerupIndicator.textContent = '🛡️ SHIELD ACTIVE';
-                    powerupIndicator.classList.remove('hidden');
                     break;
+                case 'speed':
+                    player.hasSpeedBoost = true;
+                    player.speedBoostTimer = 5.0;
+                    break;
+                case 'magnet':
+                    player.hasMagnet = true;
+                    player.magnetTimer = 6.0;
+                    break;
+            }
+            updatePowerupIndicator();
+        }
+        
+        function updatePowerupIndicator() {
+            let text = '';
+            if (player.hasShield) text += '🛡️ SHIELD ';
+            if (player.hasSpeedBoost) text += '⚡ SPEED ';
+            if (player.hasMagnet)
+text += '🧲 MAGNET ';
+            
+            if (text) {
+                powerupIndicator.textContent = text;
+                powerupIndicator.classList.remove('hidden');
+            } else {
+                powerupIndicator.classList.add('hidden');
             }
         }
         
@@ -528,8 +662,8 @@
                 particles.push({
                     x: x,
                     y: y,
-                    vx: (Math.random() - 0.5) * 100,
-                    vy: (Math.random() - 0.5) * 100,
+                    vx: (Math.random() - 0.5) * 150,
+                    vy: (Math.random() - 0.5) * 150,
                     size: Math.random() * 3 + 2,
                     color: '#ffd700',
                     life: 0.6
@@ -542,7 +676,7 @@
                 const particle = particles[i];
                 particle.x += particle.vx * delta;
                 particle.y += particle.vy * delta;
-                particle.vy += 100 * delta; // Gravity
+                particle.vy += 150 * delta; // Gravity
                 particle.life -= delta;
                 
                 if (particle.life <= 0) {
@@ -567,7 +701,8 @@
         
         function render() {
             // Clear canvas with level background
-            ctx.fillStyle = level.background;
+            const levelData = levels[currentLevel];
+            ctx.fillStyle = levelData.background;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
             ctx.save();
@@ -632,12 +767,28 @@
                 ctx.translate(powerup.x, powerup.y);
                 ctx.scale(1 + Math.sin(powerup.animation) * 0.1, 1 + Math.sin(powerup.animation) * 0.1);
                 
-                // Power-up glow
+                // Power-up glow and color based on type
+                let color, icon;
+                switch(powerup.type) {
+                    case 'shield':
+                        color = '#00ffff';
+                        icon = '🛡️';
+                        break;
+                    case 'speed':
+                        color = '#ffff00';
+                        icon = '⚡';
+                        break;
+                    case 'magnet':
+                        color = '#ff00ff';
+                        icon = '🧲';
+                        break;
+                }
+                
                 ctx.shadowBlur = 20;
-                ctx.shadowColor = '#00ffff';
+                ctx.shadowColor = color;
                 
                 // Power-up body
-                ctx.fillStyle = '#00ffff';
+                ctx.fillStyle = color;
                 ctx.beginPath();
                 ctx.arc(0, 0, powerup.radius, 0, Math.PI * 2);
                 ctx.fill();
@@ -647,7 +798,7 @@
                 ctx.font = '16px Arial';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.fillText('🛡️', 0, 0);
+                ctx.fillText(icon, 0, 0);
                 
                 ctx.restore();
             }
@@ -708,6 +859,25 @@
                 ctx.shadowBlur = 0;
             }
             
+            // Speed boost effect
+            if (player.hasSpeedBoost) {
+                ctx.strokeStyle = '#ffff00';
+                ctx.lineWidth = 2;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = '#ffff00';
+                ctx.strokeRect(player.x - 3, player.y - 3, player.width + 6, player.height + 6);
+                ctx.shadowBlur = 0;
+            }
+            
+            // Magnet effect
+            if (player.hasMagnet) {
+                ctx.strokeStyle = '#ff00ff';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 5]);
+                ctx.strokeRect(player.x - 20, player.y - 20, player.width + 40, player.height + 40);
+                ctx.setLineDash([]);
+            }
+            
             // Draw character as a person
             const charX = player.x + player.width/2;
             const charY = player.y + player.height/2;
@@ -744,20 +914,57 @@
             ctx.restore();
         }
         
+        function completeLevel() {
+            levelComplete = true;
+            levelsCompleted++;
+            
+            // Bonus points for completing level
+            score += 100 * (currentLevel + 1);
+            scoreElement.textContent = score;
+            
+            levelScoreElement.textContent = score;
+            levelCompleteScreen.classList.remove('hidden');
+        }
+        
         function nextLevel() {
-            currentLevel = (currentLevel + 1) % 1;
-            levelElement.textContent = level.name;
-            player.x = 200;
-            player.y = 400;
-            player.velocityY = 0;
-            initializeLevel();
+            currentLevel++;
+            levelComplete = false;
+            
+            if (currentLevel >= levels.length) {
+                // All levels completed!
+                endGame();
+            } else {
+                // Reset player position
+                player.x = 200;
+                player.y = 400;
+                player.velocityX = 0;
+                player.velocityY = 0;
+                player.hasShield = false;
+                player.hasSpeedBoost = false;
+                player.hasMagnet = false;
+                player.isSliding = false;
+                player.height = 50;
+                player.canJump = true;
+                player.jumpCooldown = 0;
+                
+                // Update UI
+                levelElement.textContent = levels[currentLevel].name;
+                progressElement.textContent = `${currentLevel + 1}/5`;
+                levelCompleteScreen.classList.add('hidden');
+                powerupIndicator.classList.add('hidden');
+                
+                // Initialize new level
+                initializeLevel();
+            }
         }
         
         function startGame() {
             gameStarted = true;
             gameOver = false;
+            levelComplete = false;
             score = 0;
             currentLevel = 0;
+            levelsCompleted = 0;
             cameraX = 0;
             
             // Reset player
@@ -766,15 +973,20 @@
             player.velocityX = 0;
             player.velocityY = 0;
             player.hasShield = false;
+            player.hasSpeedBoost = false;
+            player.hasMagnet = false;
             player.isSliding = false;
             player.height = 50;
             player.canJump = true;
             player.jumpCooldown = 0;
             
+            // Update UI
             scoreElement.textContent = score;
-            levelElement.textContent = level.name;
+            levelElement.textContent = levels[currentLevel].name;
+            progressElement.textContent = '1/5';
             startScreen.classList.add('hidden');
             gameOverScreen.classList.add('hidden');
+            levelCompleteScreen.classList.add('hidden');
             powerupIndicator.classList.add('hidden');
             
             initializeLevel();
@@ -784,6 +996,7 @@
             gameOver = true;
             gameStarted = false;
             finalScoreElement.textContent = score;
+            levelsCompletedElement.textContent = levelsCompleted;
             gameOverScreen.classList.remove('hidden');
         }
         

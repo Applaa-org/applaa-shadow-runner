@@ -1,8 +1,8 @@
 {
   "game": {
-    "name": "Shadow Runner - Super Easy",
+    "name": "Shadow Runner - Multi Level",
     "type": "2D",
-    "description": "An extremely easy 2D runner with simple character and working controls.",
+    "description": "A multi-level 2D runner with different themes and challenges.",
     "genre": "action",
     "version": "1.0.0"
   },
@@ -19,9 +19,9 @@
     "rendering": {}
   },
   "player": {
-    "speed": 80,
-    "jumpVelocity": -200,
-    "slideDuration": 1.5,
+    "speed": 100,
+    "jumpVelocity": -250,
+    "slideDuration": 1.2,
     "health": 100,
     "doubleJump": false,
     "wallJump": false
@@ -33,19 +33,61 @@
   },
   "levels": [
     {
-      "name": "Easy Street",
-      "theme": "street",
-      "background": "#2a2a3e",
-      "platformColor": "#3a3a4e",
-      "obstacleColor": "#ff6b6b",
+      "name": "City Streets",
+      "theme": "city",
+      "background": "#1a1a2e",
+      "platformColor": "#16213e",
+      "obstacleColor": "#e94560",
       "difficulty": 1
+    },
+    {
+      "name": "Forest Path",
+      "theme": "forest",
+      "background": "#0d2818",
+      "platformColor": "#1e3a2e",
+      "obstacleColor": "#4a7c59",
+      "difficulty": 2
+    },
+    {
+      "name": "Desert Dunes",
+      "theme": "desert",
+      "background": "#3e2723",
+      "platformColor": "#5d4037",
+      "obstacleColor": "#ff6f00",
+      "difficulty": 3
+    },
+    {
+      "name": "Ice Mountains",
+      "theme": "ice",
+      "background": "#1a237e",
+      "platformColor": "#283593",
+      "obstacleColor": "#64b5f6",
+      "difficulty": 4
+    },
+    {
+      "name": "Space Station",
+      "theme": "space",
+      "background": "#000000",
+      "platformColor": "#1a1a1a",
+      "obstacleColor": "#ff00ff",
+      "difficulty": 5
     }
   ],
   "powerups": [
     {
       "name": "shield",
-      "duration": 10.0,
+      "duration": 8.0,
       "effect": "invincibility"
+    },
+    {
+      "name": "speed",
+      "duration": 5.0,
+      "effect": "speed_boost"
+    },
+    {
+      "name": "magnet",
+      "duration": 6.0,
+      "effect": "coin_magnet"
     }
   ],
   "scenes": [],

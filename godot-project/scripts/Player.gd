@@ -1,9 +1,9 @@
 extends CharacterBody2D
 
-const SPEED = 80.0  # Very slow speed
-const JUMP_VELOCITY = -200.0  # Easy jump
-const SLIDE_DURATION = 1.5  # Long slide
-const GRAVITY = 300.0  # Very low gravity
+const SPEED = 100.0
+const JUMP_VELOCITY = -250.0
+const SLIDE_DURATION = 1.2
+const GRAVITY = 400.0
 
 @onready var sprite = $Sprite2D
 @onready var collision_shape = $CollisionShape2D
@@ -16,9 +16,13 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var is_sliding = false
 var slide_timer = 0.0
 var has_shield = false
+var has_speed_boost = false
+var has_magnet = false
 var is_jumping = false
 var can_jump = true
 var jump_cooldown = 0.0
+var speed_boost_timer = 0.0
+var magnet_timer = 0.0
 
 func _ready():
 	slide_collision.disabled = true
@@ -26,20 +30,15 @@ func _ready():
 
 func setup_character_appearance():
 	# Make character look like a person
-	# Head (circle)
 	head.modulate = Color.FLORAL_WHITE
 	head.position = Vector2(0, -20)
-	
-	# Body (rectangle)
 	body.modulate = Color.BLUE
 	body.position = Vector2(0, 0)
-	
-	# Legs (rectangle)
 	legs.modulate = Color.DARK_BLUE
 	legs.position = Vector2(0, 20)
 
 func _physics_process(delta):
-	# Apply gravity (very gentle)
+	# Apply gravity
 	if not is_on_floor():
 		velocity.y += gravity * delta
 	else:
@@ -58,7 +57,18 @@ func _physics_process(delta):
 		if slide_timer <= 0:
 			stop_slide()
 	
-	# Handle jump - MULTIPLE INPUTS
+	# Handle power-up timers
+	if has_speed_boost:
+		speed_boost_timer -= delta
+		if speed_boost_timer <= 0:
+			has_speed_boost = false
+	
+	if has_magnet:
+		magnet_timer -= delta
+		if magnet_timer <= 0:
+			has_magnet = false
+	
+	# Handle jump
 	if Input.is_action_just_pressed("jump") and is_on_floor() and not is_sliding and can_jump:
 		velocity.y = JUMP_VELOCITY
 		is_jumping = true
@@ -70,8 +80,11 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("slide") and is_on_floor() and not is_sliding:
 		start_slide()
 	
-	# Automatic running (very slow)
-	velocity.x = SPEED
+	# Automatic running with speed boost
+	var current_speed = SPEED
+	if has_speed_boost:
+		current_speed *= 1.5
+	velocity.x = current_speed
 	
 	# Move and slide
 	move_and_slide()
@@ -117,13 +130,20 @@ func enable_shield():
 	has_shield = true
 	$Shield.visible = true
 
+func enable_speed_boost():
+	has_speed_boost = true
+	speed_boost_timer = 5.0
+
+func enable_magnet():
+	has_magnet = true
+	magnet_timer = 6.0
+
 func disable_shield():
 	has_shield = false
 	$Shield.visible = false
 
 func take_damage():
 	if not has_shield:
-		# Player takes damage
 		animate_hit()
 	else:
 		disable_shield()
