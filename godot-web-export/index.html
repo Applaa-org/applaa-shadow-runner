@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Shadow Runner - Easy Mode</title>
+    <title>Shadow Runner - Super Easy</title>
     <meta charset="UTF-8">
     <style>
         * {
@@ -14,7 +14,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background: linear-gradient(135deg, #2a2a3e 0%, #3a3a4e 50%, #4a4a5e 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #ffffff;
             overflow: hidden;
@@ -25,19 +25,19 @@
             position: relative;
         }
         #gameCanvas {
-            border: 2px solid #4a9eff;
+            border: 2px solid #6bb6ff;
             border-radius: 8px;
-            background: #1a1a2e;
-            box-shadow: 0 4px 30px rgba(74, 158, 255, 0.4);
+            background: #2a2a3e;
+            box-shadow: 0 4px 30px rgba(107, 182, 255, 0.4);
             display: block;
             margin: 20px auto;
             cursor: pointer;
         }
         h1 {
-            color: #4a9eff;
+            color: #6bb6ff;
             margin-bottom: 10px;
             font-size: 32px;
-            text-shadow: 0 0 20px rgba(74, 158, 255, 0.5);
+            text-shadow: 0 0 20px rgba(107, 182, 255, 0.5);
         }
         .info {
             color: #cccccc;
@@ -47,7 +47,7 @@
         .controls {
             margin-top: 15px;
             color: #4ade80;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
         }
         .score {
@@ -84,7 +84,7 @@
             border-radius: 8px;
         }
         .start-screen h2, .game-over-screen h2 {
-            color: #4a9eff;
+            color: #6bb6ff;
             font-size: 36px;
             margin-bottom: 20px;
         }
@@ -94,7 +94,7 @@
             margin-bottom: 30px;
         }
         .btn {
-            background: linear-gradient(45deg, #4a9eff, #6bb6ff);
+            background: linear-gradient(45deg, #6bb6ff, #8cc8ff);
             color: white;
             border: none;
             padding: 15px 40px;
@@ -102,11 +102,11 @@
             border-radius: 25px;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(74, 158, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(107, 182, 255, 0.3);
         }
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(74, 158, 255, 0.5);
+            box-shadow: 0 6px 20px rgba(107, 182, 255, 0.5);
         }
         .hidden {
             display: none !important;
@@ -115,21 +115,21 @@
 </head>
 <body>
     <div id="gameContainer">
-        <h1>🏃 Shadow Runner - Easy Mode</h1>
-        <div class="info">Very easy and slow runner game</div>
+        <h1>🏃 Shadow Runner - Super Easy</h1>
+        <div class="info">Extremely easy runner game with character</div>
         <canvas id="gameCanvas" width="1280" height="720"></canvas>
         <div class="score">Score: <span id="score">0</span></div>
-        <div class="level">Level: <span id="level">Easy City</span></div>
+        <div class="level">Level: <span id="level">Easy Street</span></div>
         <div class="powerup-indicator hidden" id="powerupIndicator"></div>
         <div class="controls">
-            🎮 SPACEBAR = JUMP | DOWN ARROW = SLIDE
+            🎮 SPACEBAR or W or UP ARROW = JUMP | S or DOWN ARROW = SLIDE
         </div>
         
         <div class="start-screen" id="startScreen">
-            <h2>SHADOW RUNNER - EASY MODE</h2>
-            <p>Very slow and easy runner game</p>
-            <p>Press SPACEBAR to jump over obstacles</p>
-            <p>Press DOWN ARROW to slide under barriers</p>
+            <h2>SHADOW RUNNER - SUPER EASY</h2>
+            <p>Extremely easy runner game</p>
+            <p>Press SPACEBAR, W, or UP ARROW to jump</p>
+            <p>Press S or DOWN ARROW to slide</p>
             <button class="btn" onclick="startGame()">START GAME</button>
         </div>
         
@@ -150,39 +150,43 @@
         const finalScoreElement = document.getElementById('finalScore');
         const powerupIndicator = document.getElementById('powerupIndicator');
         
-        // Game state - VERY SLOW AND EASY
+        // Game state - SUPER EASY
         let gameStarted = false;
         let gameOver = false;
         let score = 0;
         let currentLevel = 0;
         let cameraX = 0;
-        let slowmoActive = false;
-        let slowmoTimer = 0;
         
         const canvasWidth = 1280;
         const canvasHeight = 720;
-        const GRAVITY = 400;  // Much lower gravity
-        const AUTO_RUN_SPEED = 100;  // Very slow speed
+        const GRAVITY = 300;  # Very low gravity
+        const AUTO_RUN_SPEED = 80;  # Very slow speed
         
-        // Player state - EASY CONTROLS
+        // Player state - CHARACTER APPEARANCE
         let player = {
             x: 200,
             y: 400,
-            width: 40,
-            height: 60,
+            width: 30,
+            height: 50,
             velocityX: 0,
             velocityY: 0,
             speed: AUTO_RUN_SPEED,
-            jumpPower: -250,  // Lower jump
+            jumpPower: -200,  # Easy jump
             onGround: false,
             isSliding: false,
             slideTimer: 0,
-            slideDuration: 1.0,  // Longer slide
+            slideDuration: 1.5,  # Long slide
             hasShield: false,
-            color: '#4a9eff'
+            canJump: true,
+            jumpCooldown: 0,
+            color: '#6bb6ff',
+            // Character parts
+            head: { x: 0, y: -20, radius: 12, color: '#ffffff' },
+            body: { x: 0, y: 0, width: 20, height: 20, color: '#0080ff' },
+            legs: { x: 0, y: 20, width: 15, height: 15, color: '#004080' }
         };
         
-        // Game objects - FEWER OBSTACLES
+        // Game objects - VERY FEW OBSTACLES
         let platforms = [];
         let obstacles = [];
         let enemies = [];
@@ -191,24 +195,29 @@
         let powerups = [];
         let particles = [];
         
-        // Input handling - ONLY SPACEBAR
+        // Input handling - MULTIPLE CONTROLS
         let keys = {};
         
-        // Level themes - EASIER LEVELS
-        const levels = [
-            {name: "Easy City", background: "#1a1a2e", platformColor: "#16213e"},
-            {name: "Green Park", background: "#0d2818", platformColor: "#1e3a2e"},
-            {name: "Blue Sky", background: "#1a3a5c", platformColor: "#2a4a6c"}
-        ];
+        // Level theme
+        const level = {
+            name: "Easy Street",
+            background: "#2a2a3e",
+            platformColor: "#3a3a4e"
+        };
         
-        // Event listeners - SIMPLE CONTROLS
+        // Event listeners - MULTIPLE INPUTS
         window.addEventListener('keydown', (e) => {
             keys[e.key.toLowerCase()] = true;
-            if (e.key === ' ') {  // ONLY SPACEBAR FOR JUMP
+            keys[e.code] = true;
+            
+            // Handle jump with multiple keys
+            if (e.key === ' ' || e.key === 'w' || e.key === 'W' || e.key === 'ArrowUp') {
                 e.preventDefault();
                 handleJump();
             }
-            if (e.key === 'ArrowDown') {
+            
+            // Handle slide
+            if (e.key === 's' || e.key === 'S' || e.key === 'ArrowDown') {
                 e.preventDefault();
                 handleSlide();
             }
@@ -216,13 +225,16 @@
         
         window.addEventListener('keyup', (e) => {
             keys[e.key.toLowerCase()] = false;
+            keys[e.code] = false;
         });
         
         function handleJump() {
             if (!gameStarted || gameOver) return;
-            if (player.onGround && !player.isSliding) {
+            if (player.onGround && !player.isSliding && player.canJump) {
                 player.velocityY = player.jumpPower;
                 player.onGround = false;
+                player.canJump = false;
+                player.jumpCooldown = 0.2;
                 createJumpParticles();
             }
         }
@@ -232,7 +244,7 @@
             if (player.onGround && !player.isSliding) {
                 player.isSliding = true;
                 player.slideTimer = player.slideDuration;
-                player.height = 30;
+                player.height = 25;
                 createSlideParticles();
             }
         }
@@ -242,10 +254,10 @@
                 particles.push({
                     x: player.x + player.width/2,
                     y: player.y + player.height,
-                    vx: (Math.random() - 0.5) * 50,
-                    vy: Math.random() * -30,
+                    vx: (Math.random() - 0.5) * 30,
+                    vy: Math.random() * -20,
                     size: Math.random() * 3 + 2,
-                    color: '#4a9eff',
+                    color: '#6bb6ff',
                     life: 0.5
                 });
             }
@@ -256,8 +268,8 @@
                 particles.push({
                     x: player.x,
                     y: player.y + player.height/2,
-                    vx: Math.random() * -30,
-                    vy: (Math.random() - 0.5) * 20,
+                    vx: Math.random() * -20,
+                    vy: (Math.random() - 0.5) * 15,
                     size: Math.random() * 4 + 2,
                     color: '#ff8800',
                     life: 0.3
@@ -277,55 +289,54 @@
             platforms.push({
                 x: 0,
                 y: 600,
-                width: 2000,  // Shorter level
+                width: 1000,  # Very short level
                 height: 120,
-                color: levels[currentLevel].platformColor
+                color: level.platformColor
             });
             
-            // Generate FEWER obstacles
-            for (let i = 0; i < 3; i++) {  // Only 3 obstacles
+            // Generate almost no obstacles
+            for (let i = 0; i < 1; i++) {  # Only 1 obstacle
                 obstacles.push({
-                    x: 400 + i * 500,  // More spaced out
+                    x: 500,
                     y: 540,
-                    width: 40,
-                    height: 30,  // Only low barriers
-                    color: '#e94560',
+                    width: 30,
+                    height: 20,  # Only low barriers
+                    color: '#ff6b6b',
                     type: 'low_barrier'
                 });
             }
             
-            // Generate FEWER enemies
-            for (let i = 0; i < 2; i++) {  // Only 2 enemies
+            // Generate almost no enemies
+            for (let i = 0; i < 1; i++) {  # Only 1 enemy
                 enemies.push({
-                    x: 600 + i * 600,
+                    x: 700,
                     y: 300,
-                    width: 30,
-                    height: 30,
+                    width: 25,
+                    height: 25,
                     color: '#ff8800',
                     shootTimer: 0,
-                    shootInterval: 4.0  // Much slower shooting
+                    shootInterval: 8.0  # Extremely slow shooting
                 });
             }
             
-            // Generate MORE coins (easier scoring)
-            for (let i = 0; i < 12; i++) {
+            // Generate lots of coins
+            for (let i = 0; i < 15; i++) {
                 coins.push({
-                    x: 200 + i * 150,
+                    x: 100 + i * 60,
                     y: 350,
-                    radius: 15,
+                    radius: 12,
                     collected: false,
                     animation: 0
                 });
             }
             
-            // Generate MORE power-ups
-            const powerTypes = ['shield', 'slowmo'];
-            for (let i = 0; i < 4; i++) {  // More power-ups
+            // Generate lots of power-ups
+            for (let i = 0; i < 5; i++) {
                 powerups.push({
-                    x: 400 + i * 400,
+                    x: 200 + i * 150,
                     y: 400,
-                    radius: 20,
-                    type: powerTypes[i % powerTypes.length],
+                    radius: 18,
+                    type: 'shield',
                     collected: false,
                     animation: 0
                 });
@@ -334,16 +345,6 @@
         
         function update(delta) {
             if (!gameStarted || gameOver) return;
-            
-            // Update slow motion
-            if (slowmoActive) {
-                slowmoTimer -= delta;
-                if (slowmoTimer <= 0) {
-                    slowmoActive = false;
-                    powerupIndicator.classList.add('hidden');
-                }
-                delta *= 0.5; // Slow down time
-            }
             
             // Update player
             updatePlayer(delta);
@@ -371,37 +372,45 @@
                 endGame();
             }
             
-            // Level progression (shorter distance)
-            if (player.x > 1800) {
+            # Level progression (very short distance)
+            if (player.x > 900) {
                 nextLevel();
             }
         }
         
         function updatePlayer(delta) {
-            // Apply gravity
+            # Apply gravity
             if (!player.onGround) {
                 player.velocityY += GRAVITY * delta;
             } else {
                 player.onGround = true;
             }
             
-            // Handle slide
+            # Handle jump cooldown
+            if (player.jumpCooldown > 0) {
+                player.jumpCooldown -= delta;
+                if (player.jumpCooldown <= 0) {
+                    player.canJump = true;
+                }
+            }
+            
+            # Handle slide
             if (player.isSliding) {
                 player.slideTimer -= delta;
                 if (player.slideTimer <= 0) {
                     player.isSliding = false;
-                    player.height = 60;
+                    player.height = 50;
                 }
             }
             
-            // Automatic running (very slow)
+            # Automatic running (very slow)
             player.velocityX = player.speed;
             
-            // Update position
+            # Update position
             player.x += player.velocityX * delta;
             player.y += player.velocityY * delta;
             
-            // Check ground collision
+            # Check ground collision
             player.onGround = false;
             for (let platform of platforms) {
                 if (checkCollision(player, platform)) {
@@ -413,7 +422,7 @@
                 }
             }
             
-            // Check obstacle collisions
+            # Check obstacle collisions
             for (let obstacle of obstacles) {
                 if (checkCollision(player, obstacle)) {
                     if (player.hasShield) {
@@ -444,10 +453,10 @@
             lasers.push({
                 x: enemy.x,
                 y: enemy.y,
-                vx: (dx / distance) * 150,  // Slower lasers
-                vy: (dy / distance) * 150,
-                width: 20,
-                height: 5,
+                vx: (dx / distance) * 80,  # Extremely slow lasers
+                vy: (dy / distance) * 80,
+                width: 15,
+                height: 4,
                 color: '#ff0000'
             });
         }
@@ -458,7 +467,7 @@
                 laser.x += laser.vx * delta;
                 laser.y += laser.vy * delta;
                 
-                // Check collision with player
+                # Check collision with player
                 if (checkCollision(laser, player)) {
                     if (player.hasShield) {
                         player.hasShield = false;
@@ -470,7 +479,7 @@
                     continue;
                 }
                 
-                // Remove if out of bounds
+                # Remove if out of bounds
                 if (laser.x < cameraX - 100 || laser.x > cameraX + canvasWidth + 100 ||
                     laser.y < -100 || laser.y > canvasHeight + 100) {
                     lasers.splice(i, 1);
@@ -515,12 +524,6 @@
                     powerupIndicator.textContent = '🛡️ SHIELD ACTIVE';
                     powerupIndicator.classList.remove('hidden');
                     break;
-                case 'slowmo':
-                    slowmoActive = true;
-                    slowmoTimer = 5.0;
-                    powerupIndicator.textContent = '⏱️ SLOW MOTION';
-                    powerupIndicator.classList.remove('hidden');
-                    break;
             }
         }
         
@@ -529,8 +532,8 @@
                 particles.push({
                     x: x,
                     y: y,
-                    vx: (Math.random() - 0.5) * 150,
-                    vy: (Math.random() - 0.5) * 150,
+                    vx: (Math.random() - 0.5) * 100,
+                    vy: (Math.random() - 0.5) * 100,
                     size: Math.random() * 3 + 2,
                     color: '#ffd700',
                     life: 0.6
@@ -543,7 +546,7 @@
                 const particle = particles[i];
                 particle.x += particle.vx * delta;
                 particle.y += particle.vy * delta;
-                particle.vy += 150 * delta; // Gravity
+                particle.vy += 100 * delta; # Gravity
                 particle.life -= delta;
                 
                 if (particle.life <= 0) {
@@ -567,30 +570,30 @@
         }
         
         function render() {
-            // Clear canvas with level background
-            ctx.fillStyle = levels[currentLevel].background;
+            # Clear canvas with level background
+            ctx.fillStyle = level.background;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
             ctx.save();
             ctx.translate(-cameraX, 0);
             
-            // Draw platforms
+            # Draw platforms
             for (let platform of platforms) {
                 ctx.fillStyle = platform.color;
                 ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
                 
-                // Add edge highlight
+                # Add edge highlight
                 ctx.strokeStyle = '#ffffff';
                 ctx.lineWidth = 2;
                 ctx.strokeRect(platform.x, platform.y, platform.width, platform.height);
             }
             
-            // Draw obstacles
+            # Draw obstacles
             for (let obstacle of obstacles) {
                 ctx.fillStyle = obstacle.color;
                 ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
                 
-                // Add warning stripes
+                # Add warning stripes
                 ctx.strokeStyle = '#ffff00';
                 ctx.lineWidth = 2;
                 ctx.setLineDash([5, 5]);
@@ -598,7 +601,7 @@
                 ctx.setLineDash([]);
             }
             
-            // Draw coins
+            # Draw coins
             for (let coin of coins) {
                 if (coin.collected) continue;
                 
@@ -606,26 +609,26 @@
                 ctx.translate(coin.x, coin.y);
                 ctx.rotate(coin.animation);
                 
-                // Coin glow
+                # Coin glow
                 ctx.shadowBlur = 15;
                 ctx.shadowColor = '#ffd700';
                 
-                // Coin body
+                # Coin body
                 ctx.fillStyle = '#ffd700';
                 ctx.beginPath();
                 ctx.arc(0, 0, coin.radius, 0, Math.PI * 2);
                 ctx.fill();
                 
-                // Coin highlight
+                # Coin highlight
                 ctx.fillStyle = '#ffed4e';
                 ctx.beginPath();
-                ctx.arc(-3, -3, coin.radius * 0.7, 0, Math.PI * 2);
+                ctx.arc(-2, -2, coin.radius * 0.7, 0, Math.PI * 2);
                 ctx.fill();
                 
                 ctx.restore();
             }
             
-            // Draw power-ups
+            # Draw power-ups
             for (let powerup of powerups) {
                 if (powerup.collected) continue;
                 
@@ -633,58 +636,58 @@
                 ctx.translate(powerup.x, powerup.y);
                 ctx.scale(1 + Math.sin(powerup.animation) * 0.1, 1 + Math.sin(powerup.animation) * 0.1);
                 
-                // Power-up glow
+                # Power-up glow
                 ctx.shadowBlur = 20;
-                ctx.shadowColor = powerup.type === 'shield' ? '#00ffff' : '#ffff00';
+                ctx.shadowColor = '#00ffff';
                 
-                // Power-up body
-                ctx.fillStyle = powerup.type === 'shield' ? '#00ffff' : '#ffff00';
+                # Power-up body
+                ctx.fillStyle = '#00ffff';
                 ctx.beginPath();
                 ctx.arc(0, 0, powerup.radius, 0, Math.PI * 2);
                 ctx.fill();
                 
-                // Power-up icon
+                # Power-up icon
                 ctx.fillStyle = '#ffffff';
                 ctx.font = '16px Arial';
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                const icon = powerup.type === 'shield' ? '🛡️' : '⏱️';
-                ctx.fillText(icon, 0, 0);
+                ctx.fillText('🛡️', 0, 0);
                 
                 ctx.restore();
             }
             
-            // Draw enemies
+            # Draw enemies
             for (let enemy of enemies) {
                 ctx.fillStyle = enemy.color;
                 ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
                 
-                // Enemy eye
+                # Enemy eye
                 ctx.fillStyle = '#ffffff';
-                ctx.fillRect(enemy.x + 5, enemy.y + 5, 8, 8);
+                ctx.fillRect(enemy.x + 5, enemy.y + 5, 6, 6);
+               
+
                 ctx.fillStyle = '#ff0000';
-                ctx.fillRect(enemy.x + 7, enemy.y + 7, 4, 4);
+                ctx.fillRect(enemy.x + 7, enemy.y + 7, 2, 2);
             }
             
-            // Draw lasers
+            # Draw lasers
             for (let laser of lasers) {
                 ctx.save();
                 ctx.translate(laser.x + laser.width/2, laser.y + laser.height/2);
                 ctx.rotate(Math.atan2(laser.vy, laser.vx));
                 
-                // Laser glow
-                ctx
-.shadowBlur = 10;
+                # Laser glow
+                ctx.shadowBlur = 10;
                 ctx.shadowColor = '#ff0000';
                 
-                // Laser body
+                # Laser body
                 ctx.fillStyle = laser.color;
                 ctx.fillRect(-laser.width/2, -laser.height/2, laser.width, laser.height);
                 
                 ctx.restore();
             }
             
-            // Draw particles
+            # Draw particles
             for (let particle of particles) {
                 ctx.globalAlpha = particle.life;
                 ctx.fillStyle = particle.color;
@@ -692,18 +695,17 @@
             }
             ctx.globalAlpha = 1;
             
-            // Draw player
+            # Draw character player
             ctx.save();
             
-            // Player shadow
+            # Player shadow
             ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
             ctx.ellipse(player.x + player.width/2, player.y + player.height + 5, 
                        player.width/2, 5, 0, 0, Math.PI * 2);
             ctx.fill();
             
-            // Player body
+            # Shield effect
             if (player.hasShield) {
-                // Shield effect
                 ctx.strokeStyle = '#00ffff';
                 ctx.lineWidth = 3;
                 ctx.shadowBlur = 15;
@@ -712,12 +714,36 @@
                 ctx.shadowBlur = 0;
             }
             
-            ctx.fillStyle = player.color;
-            ctx.fillRect(player.x, player.y, player.width, player.height);
+            # Draw character parts
+            const charX = player.x + player.width/2;
+            const charY = player.y + player.height/2;
             
-            // Player highlight
-            ctx.fillStyle = '#6bb6ff';
-            ctx.fillRect(player.x + 5, player.y + 5, player.width - 10, 5);
+            # Legs
+            ctx.fillStyle = player.legs.color;
+            const legY = player.isSliding ? charY + 5 : charY + 20;
+            ctx.fillRect(charX - player.legs.width/2, legY, player.legs.width, player.legs.height);
+            
+            # Body
+            ctx.fillStyle = player.body.color;
+            const bodyY = player.isSliding ? charY + 5 : charY;
+            ctx.fillRect(charX - player.body.width/2, bodyY, player.body.width, player.body.height);
+            
+            # Head
+            ctx.fillStyle = player.head.color;
+            const headY = player.isSliding ? charY - 5 : charY - 20;
+            ctx.beginPath();
+            ctx.arc(charX, headY, player.head.radius, 0, Math.PI * 2);
+            ctx.fill();
+            
+            # Face details
+            ctx.fillStyle = '#000000';
+            # Eyes
+            ctx.fillRect(charX - 4, headY - 3, 2, 2);
+            ctx.fillRect(charX + 2, headY - 3, 2, 2);
+            # Smile
+            ctx.beginPath();
+            ctx.arc(charX, headY + 2, 3, 0, Math.PI);
+            ctx.stroke();
             
             ctx.restore();
             
@@ -725,8 +751,8 @@
         }
         
         function nextLevel() {
-            currentLevel = (currentLevel + 1) % levels.length;
-            levelElement.textContent = levels[currentLevel].name;
+            currentLevel = (currentLevel + 1) % 1;
+            levelElement.textContent = level.name;
             player.x = 200;
             player.y = 400;
             player.velocityY = 0;
@@ -739,19 +765,20 @@
             score = 0;
             currentLevel = 0;
             cameraX = 0;
-            slowmoActive = false;
             
-            // Reset player
+            # Reset player
             player.x = 200;
             player.y = 400;
             player.velocityX = 0;
             player.velocityY = 0;
             player.hasShield = false;
             player.isSliding = false;
-            player.height = 60;
+            player.height = 50;
+            player.canJump = true;
+            player.jumpCooldown = 0;
             
             scoreElement.textContent = score;
-            levelElement.textContent = levels[currentLevel].name;
+            levelElement.textContent = level.name;
             startScreen.classList.add('hidden');
             gameOverScreen.classList.add('hidden');
             powerupIndicator.classList.add('hidden');
@@ -781,7 +808,7 @@
             requestAnimationFrame(gameLoop);
         }
         
-        // Initialize game
+        # Initialize game
         initializeLevel();
         gameLoop(performance.now());
     </script>
