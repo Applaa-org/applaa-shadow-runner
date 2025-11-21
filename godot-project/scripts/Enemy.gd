@@ -1,8 +1,8 @@
 extends Node2D
 
-@export var shoot_interval = 4.0  # Much slower shooting
-@export var laser_speed = 200.0  # Slower lasers
-@export var detection_range = 200.0  # Shorter range
+@export var shoot_interval = 4.0  # Much slower
+@export var laser_speed = 200.0   # Much slower
+@export var detection_range = 200.0
 
 @onready var sprite = $Sprite2D
 @onready var shoot_timer = $ShootTimer
@@ -18,9 +18,9 @@ func _ready():
 
 func _process(delta):
 	if player:
-		# Look at player (slower rotation)
+		# Look at player
 		var direction = (player.global_position - global_position).normalized()
-		sprite.rotation = lerp_angle(sprite.rotation, direction.angle(), 0.05)
+		sprite.rotation = direction.angle()
 
 func _on_detection_area_body_entered(body):
 	if body.name == "Player":

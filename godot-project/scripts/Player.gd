@@ -19,9 +19,10 @@ func _ready():
 	slide_collision.disabled = true
 
 func _physics_process(delta):
-	# Apply gravity
+	# Apply gravity (much lower)
 	if not is_on_floor():
 		velocity.y += gravity * delta
+		on_ground = false
 	else:
 		on_ground = true
 	
@@ -32,16 +33,15 @@ func _physics_process(delta):
 			stop_slide()
 	
 	# Handle jump - ONLY SPACEBAR
-	if Input.is_action_just_pressed("ui_accept") and is_on_floor() and not is_sliding:
+	if Input.is_action_just_pressed("ui_accept") and on_ground and not is_sliding:
 		velocity.y = JUMP_VELOCITY
-		on_ground = false
 		$JumpSound.play()
 	
 	# Handle slide
-	if Input.is_action_just_pressed("ui_down") and is_on_floor() and not is_sliding:
+	if Input.is_action_just_pressed("ui_down") and on_ground and not is_sliding:
 		start_slide()
 	
-	# Automatic running (slower)
+	# Automatic running (much slower)
 	velocity.x = SPEED
 	
 	# Move and slide
@@ -52,7 +52,7 @@ func start_slide():
 	slide_timer = SLIDE_DURATION
 	sprite.scale.y = 0.5
 	collision_shape.disabled = true
-	slide_collision.disabled = false
+	slide_collision.disabled = true
 	$SlideSound.play()
 
 func stop_slide():
@@ -75,7 +75,7 @@ func take_damage():
 		$HitSound.play()
 		# Flash red
 		sprite.modulate = Color.RED
-		await get_tree().create_timer(0.2).timeout
+		await get_tree().create_timer(0.1).timeout
 		sprite.modulate = Color.WHITE
 	else:
 		disable_shield()

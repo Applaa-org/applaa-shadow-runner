@@ -1,8 +1,8 @@
 {
   "game": {
-    "name": "Shadow Runner",
+    "name": "Shadow Runner - Easy Mode",
     "type": "2D",
-    "description": "A simple 2D side-scrolling runner with easy controls and slower pace.",
+    "description": "A simple and easy 2D side-scrolling runner with slow pace and simple controls.",
     "genre": "action",
     "version": "1.0.0"
   },

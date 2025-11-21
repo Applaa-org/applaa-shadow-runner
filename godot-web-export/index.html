@@ -173,11 +173,11 @@
             velocityX: 0,
             velocityY: 0,
             speed: AUTO_RUN_SPEED,
-            jumpPower: -300,  # Lower jump
+            jumpPower: -300,  // Lower jump
             onGround: false,
             isSliding: false,
             slideTimer: 0,
-            slideDuration: 1.0,  # Longer slide
+            slideDuration: 1.0,  // Longer slide
             hasShield: false,
             color: '#4a9eff'
         };
@@ -204,7 +204,7 @@
         // Event listeners - SIMPLE CONTROLS
         window.addEventListener('keydown', (e) => {
             keys[e.key.toLowerCase()] = true;
-            if (e.key === ' ') {  # ONLY SPACEBAR FOR JUMP
+            if (e.key === ' ') {  // ONLY SPACEBAR FOR JUMP
                 e.preventDefault();
                 handleJump();
             }
@@ -277,25 +277,25 @@
             platforms.push({
                 x: 0,
                 y: 600,
-                width: 2000,  # Shorter level
+                width: 2000,  // Shorter level
                 height: 120,
                 color: levels[currentLevel].platformColor
             });
             
             // Generate FEWER obstacles
-            for (let i = 0; i < 3; i++) {  # Only 3 obstacles
+            for (let i = 0; i < 3; i++) {  // Only 3 obstacles
                 obstacles.push({
-                    x: 400 + i * 500,  # More spaced out
+                    x: 400 + i * 500,  // More spaced out
                     y: 540,
                     width: 40,
-                    height: 30,  # Only low barriers
+                    height: 30,  // Only low barriers
                     color: '#e94560',
                     type: 'low_barrier'
                 });
             }
             
             // Generate FEWER enemies
-            for (let i = 0; i < 2; i++) {  # Only 2 enemies
+            for (let i = 0; i < 2; i++) {  // Only 2 enemies
                 enemies.push({
                     x: 600 + i * 600,
                     y: 300,
@@ -303,7 +303,7 @@
                     height: 30,
                     color: '#ff8800',
                     shootTimer: 0,
-                    shootInterval: 4.0  # Much slower shooting
+                    shootInterval: 4.0  // Much slower shooting
                 });
             }
             
@@ -320,7 +320,7 @@
             
             // Generate MORE power-ups
             const powerTypes = ['shield', 'slowmo'];
-            for (let i = 0; i < 4; i++) {  # More power-ups
+            for (let i = 0; i < 4; i++) {  // More power-ups
                 powerups.push({
                     x: 400 + i * 400,
                     y: 400,
@@ -444,7 +444,7 @@
             lasers.push({
                 x: enemy.x,
                 y: enemy.y,
-                vx: (dx / distance) * 200,  # Slower lasers
+                vx: (dx / distance) * 200,  // Slower lasers
                 vy: (dy / distance) * 200,
                 width: 20,
                 height: 5,
@@ -503,8 +503,7 @@
                     powerup.collected = true;
                     activatePowerup(powerup.type);
                     score += 50;
-                    scoreElement.textContent =
- score;
+                    scoreElement.textContent = score;
                 }
             }
         }
@@ -519,7 +518,10 @@
                 case 'slowmo':
                     slowmoActive = true;
                     slowmoTimer = 5.0;
-                    powerupIndicator.textContent = '⏱️ SLOW MOTION';
+                    powerupIndicator.textContent = '⏱️ S
+
+
+LOW MOTION';
                     powerupIndicator.classList.remove('hidden');
                     break;
             }

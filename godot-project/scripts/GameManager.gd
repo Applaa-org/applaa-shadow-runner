@@ -44,7 +44,7 @@ func next_level():
 
 func activate_slowmo():
 	slowmo_active = true
-	slowmo_timer = 5.0  # Longer duration
+	slowmo_timer = 5.0
 	Engine.time_scale = 0.5
 
 func deactivate_slowmo():

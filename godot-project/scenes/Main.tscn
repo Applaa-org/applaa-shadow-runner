@@ -87,19 +87,13 @@ offset_bottom = 150.0
 [node name="TitleLabel" type="Label" parent="UI/StartScreen/VBoxContainer"]
 layout_mode = 2
 theme = SubResource("Theme_1")
-text = "SHADOW RUNNER"
+text = "SHADOW RUNNER - EASY MODE"
 horizontal_alignment = 1
 
 [node name="InstructionsLabel" type="Label" parent="UI/StartScreen/VBoxContainer"]
 layout_mode = 2
 theme = SubResource("Theme_1")
-text = "EASY MODE - SPACEBAR TO JUMP"
-horizontal_alignment = 1
-
-[node name="InstructionsLabel2" type="Label" parent="UI/StartScreen/VBoxContainer"]
-layout_mode = 2
-theme = SubResource("Theme_1")
-text = "DOWN ARROW TO SLIDE"
+text = "SPACEBAR = JUMP | DOWN ARROW = SLIDE"
 horizontal_alignment = 1
 
 [node name="StartButton" type="Button" parent="UI/StartScreen/VBoxContainer"]

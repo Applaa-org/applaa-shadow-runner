@@ -1,7 +1,7 @@
 extends Node2D
 
 @export var section_length = 600  # Shorter sections
-@export var min_gap = 300  # More space between obstacles
+@export var min_gap = 300         # More spaced out
 @export var max_gap = 500
 
 var obstacle_scene = preload("res://scenes/Obstacle.tscn")
@@ -14,8 +14,8 @@ func generate_level(level_index: int):
 	for child in get_children():
 		child.queue_free()
 	
-	# Generate level sections (fewer sections)
-	var sections = 3
+	# Generate simple level sections
+	var sections = 3  # Fewer sections
 	for i in range(sections):
 		generate_section(i * section_length, level_index)
 
@@ -29,10 +29,10 @@ func generate_section(start_x: int, level_index: int):
 	# Generate fewer enemies
 	generate_enemies(start_x, level_index)
 	
-	# Generate more coins (easier to collect)
+	# Generate more coins (easier scoring)
 	generate_collectibles(start_x, level_index)
 	
-	# Generate power-ups
+	# Generate more power-ups
 	generate_powerups(start_x, level_index)
 
 func generate_platforms(start_x: int, level_index: int):
@@ -47,42 +47,41 @@ func generate_platforms(start_x: int, level_index: int):
 	add_child(platform)
 
 func generate_obstacles(start_x: int, level_index: int):
-	# Much fewer obstacles
-	var num_obstacles = 1  # Only 1 obstacle per section
+	# Generate very few obstacles
+	var num_obstacles = 2  # Only 2 obstacles
 	for i in range(num_obstacles):
 		var obstacle = obstacle_scene.instantiate()
-		var x = start_x + 400  # Fixed position
-		var y = 540  # Ground level
+		var x = start_x + 200 + i * 300  # More spaced out
+		var y = 540
 		
 		obstacle.position = Vector2(x, y)
 		obstacle.obstacle_type = "low_barrier"  # Only low barriers (easier)
 		add_child(obstacle)
 
 func generate_enemies(start_x: int, level_index: int):
-	# Much fewer enemies
-	var num_enemies = 1  # Only 1 enemy per section
+	# Generate very few enemies
+	var num_enemies = 1  # Only 1 enemy
 	for i in range(num_enemies):
 		var enemy = enemy_scene.instantiate()
-		var x = start_x + 200  # Fixed position
-		var y = 300  # Higher position (easier to avoid)
+		var x = start_x + 400
+		var y = 300
 		
 		enemy.position = Vector2(x, y)
 		add_child(enemy)
 
 func generate_collectibles(start_x: int, level_index: int):
-	# More coins for easier scoring
+	# Generate more coins (easier to score)
 	var num_coins = 8  # More coins
 	for i in range(num_coins):
 		var coin = coin_scene.instantiate()
-		var x = start_x + 100 + i * 60  # Evenly spaced
-		var y = 350  # Easy height
+		var x = start_x + 100 + i * 60  # Closer together
+		var y = 350
 		
 		coin.position = Vector2(x, y)
-		coin.add_to_group("coins")
 		add_child(coin)
 
 func generate_powerups(start_x: int, level_index: int):
-	# More power-ups
+	# Generate more power-ups
 	var num_powerups = 2  # More power-ups
 	var power_types = ["shield", "slowmo"]
 	
