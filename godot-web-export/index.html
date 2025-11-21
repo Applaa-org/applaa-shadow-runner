@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Shadow Runner - Adventure</title>
+    <title>Shadow Runner - Triple Jump Paradise</title>
     <meta charset="UTF-8">
     <style>
         * {
@@ -14,7 +14,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 50%, #45b7d1 100%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #ffffff;
             overflow: hidden;
@@ -140,39 +140,50 @@
             font-weight: bold;
             text-shadow: 0 0 12px rgba(0, 255, 0, 0.5);
         }
+        .jump-indicator {
+            position: absolute;
+            top: 100px;
+            right: 20px;
+            color: #00ffff;
+            font-size: 16px;
+            font-weight: bold;
+            text-shadow: 0 0 12px rgba(0, 255, 255, 0.5);
+        }
     </style>
 </head>
 <body>
     <div id="gameContainer">
-        <h1>🌟 Shadow Runner - Adventure 🌟</h1>
-        <div class="info">Exciting adventure with smooth controls and fun gameplay!</div>
+        <h1>🚀 Shadow Runner - Triple Jump Paradise 🚀</h1>
+        <div class="info">Ultimate adventure with TRIPLE JUMP for maximum collection!</div>
         <canvas id="gameCanvas" width="1280" height="720"></canvas>
         <div class="score">Score: <span id="score">0</span></div>
-        <div class="level">Level: <span id="level">Crystal Caves</span></div>
+        <div class="level">Level: <span id="level">Crystal Paradise</span></div>
         <div class="level-progress">Progress: <span id="progress">1/5</span></div>
         <div class="combo-indicator hidden" id="comboIndicator">Combo x<span id="comboCount">0</span></div>
+        <div class="jump-indicator hidden" id="jumpIndicator">Jumps: <span id="jumpCount">0</span>/3</div>
         <div class="powerup-indicator hidden" id="powerupIndicator"></div>
         <div class="controls">
-            🎮 SPACEBAR = JUMP (DOUBLE JUMP!) | DOWN ARROW = SLIDE
+            🎮 SPACEBAR = JUMP (TRIPLE JUMP!) | DOWN ARROW = SLIDE
         </div>
         
         <div class="start-screen" id="startScreen">
-            <h2>🌟 SHADOW RUNNER - ADVENTURE 🌟</h2>
-            <p>Experience the ultimate adventure!</p>
-            <p>Crystal Caves → Golden Desert → Ocean Depths → Volcano Peak → Sky Temple</p>
-            <p>🚀 DOUBLE JUMP available! 🧲 Auto-magnet coins! 🛡️ Collect power-ups!</p>
-            <button class="btn" onclick="startGame()">START ADVENTURE</button>
+            <h2>🚀 TRIPLE JUMP PARADISE 🚀</h2>
+            <p>Experience the ultimate collection adventure!</p>
+            <p>Crystal Paradise → Golden Valley → Ocean Paradise → Volcano Heaven → Sky Paradise</p>
+            <p>🚀 TRIPLE JUMP available! 🧲 Super magnet! 🛡️ Amazing power-ups!</p>
+            <p>Press SPACEBAR 3 times in air for maximum height!</p>
+            <button class="btn" onclick="startGame()">START PARADISE</button>
         </div>
         
         <div class="level-complete-screen hidden" id="levelCompleteScreen">
-            <h2>🎉 LEVEL COMPLETE! 🎉</h2>
+            <h2>🎉 PARADISE COMPLETE! 🎉</h2>
             <p>Amazing Score: <span id="levelScore">0</span></p>
-            <p>Ready for the next adventure?</p>
-            <button class="btn" onclick="nextLevel()">NEXT LEVEL</button>
+            <p>Ready for the next paradise?</p>
+            <button class="btn" onclick="nextLevel()">NEXT PARADISE</button>
         </div>
         
         <div class="game-over-screen hidden" id="gameOverScreen">
-            <h2>💫 ADVENTURE COMPLETE 💫</h2>
+            <h2>💫 PARADISE ADVENTURE COMPLETE 💫</h2>
             <p>Final Score: <span id="finalScore">0</span></p>
             <p>Levels Completed: <span id="levelsCompleted">0</span></p>
             <button class="btn" onclick="restartGame()">PLAY AGAIN</button>
@@ -194,8 +205,10 @@
         const powerupIndicator = document.getElementById('powerupIndicator');
         const comboIndicator = document.getElementById('comboIndicator');
         const comboCountElement = document.getElementById('comboCount');
+        const jumpIndicator = document.getElementById('jumpIndicator');
+        const jumpCountElement = document.getElementById('jumpCount');
         
-        // Game state - ENHANCED
+        // Game state - TRIPLE JUMP EDITION
         let gameStarted = false;
         let gameOver = false;
         let score = 0;
@@ -210,9 +223,9 @@
         const canvasHeight = 720;
         const GRAVITY = 500;  // Better gravity
         const AUTO_RUN_SPEED = 120;  // Faster speed
-        const DOUBLE_JUMP_VELOCITY = -300;  // Double jump power
+        const TRIPLE_JUMP_VELOCITY = -280;  // Triple jump power
         
-        // Player state - ENHANCED
+        // Player state - TRIPLE JUMP
         let player = {
             x: 200,
             y: 400,
@@ -223,6 +236,7 @@
             speed: AUTO_RUN_SPEED,
             jumpPower: -350,  // Higher jump
             doubleJumpPower: -300,
+            tripleJumpPower: -280,
             onGround: false,
             isSliding: false,
             slideTimer: 0,
@@ -233,15 +247,16 @@
             hasSuperJump: false,
             canJump: true,
             canDoubleJump: true,
+            canTripleJump: true,
             jumpCooldown: 0,
             jumpCount: 0,
             speedBoostTimer: 0,
             magnetTimer: 0,
             superJumpTimer: 0,
-            magnetRange: 100
+            magnetRange: 150
         };
         
-        // Game objects - MORE COLLECTIBLES
+        // Game objects - MAXIMUM COLLECTIBLES
         let platforms = [];
         let obstacles = [];
         let enemies = [];
@@ -251,66 +266,66 @@
         let particles = [];
         let stars = [];
         
-        // Level themes - MORE VIBRANT
+        // Level themes - PARADISE THEMES
         const levels = [
             {
-                name: "Crystal Caves",
+                name: "Crystal Paradise",
                 background: "#1a0033",
                 platformColor: "#4a0080",
                 obstacleColor: "#ff00ff",
                 difficulty: 1,
                 obstacleCount: 1,
                 enemyCount: 0,
-                coinCount: 20,
-                powerupCount: 3
+                coinCount: 30,
+                powerupCount: 4
             },
             {
-                name: "Golden Desert",
+                name: "Golden Valley",
                 background: "#ff8c00",
                 platformColor: "#ffa500",
                 obstacleColor: "#ff4500",
                 difficulty: 2,
                 obstacleCount: 2,
                 enemyCount: 1,
-                coinCount: 25,
-                powerupCount: 4
+                coinCount: 35,
+                powerupCount: 5
             },
             {
-                name: "Ocean Depths",
+                name: "Ocean Paradise",
                 background: "#006994",
                 platformColor: "#0099cc",
                 obstacleColor: "#00ccff",
                 difficulty: 3,
                 obstacleCount: 3,
                 enemyCount: 1,
-                coinCount: 30,
-                powerupCount: 4
+                coinCount: 40,
+                powerupCount: 5
             },
             {
-                name: "Volcano Peak",
+                name: "Volcano Heaven",
                 background: "#8b0000",
                 platformColor: "#dc143c",
                 obstacleColor: "#ff6347",
                 difficulty: 4,
                 obstacleCount: 4,
                 enemyCount: 2,
-                coinCount: 35,
-                powerupCount: 5
+                coinCount: 45,
+                powerupCount: 6
             },
             {
-                name: "Sky Temple",
+                name: "Sky Paradise",
                 background: "#87ceeb",
                 platformColor: "#b0e0e6",
                 obstacleColor: "#ffffff",
                 difficulty: 5,
                 obstacleCount: 5,
                 enemyCount: 2,
-                coinCount: 40,
-                powerupCount: 5
+                coinCount: 50,
+                powerupCount: 6
             }
         ];
         
-        // Input handling - BETTER CONTROLS
+        // Input handling - TRIPLE JUMP CONTROLS
         let keys = {};
         
         // Event listeners
@@ -347,6 +362,7 @@
                     player.jumpCooldown = 0.1;
                     player.jumpCount = 1;
                     createJumpParticles();
+                    updateJumpIndicator();
                 } else if (player.canDoubleJump && player.jumpCount === 1) {
                     // Double jump
                     let jumpPower = player.doubleJumpPower;
@@ -355,6 +371,16 @@
                     player.canDoubleJump = false;
                     player.jumpCount = 2;
                     createDoubleJumpParticles();
+                    updateJumpIndicator();
+                } else if (player.canTripleJump && player.jumpCount === 2) {
+                    // Triple jump
+                    let jumpPower = player.tripleJumpPower;
+                    if (player.hasSuperJump) jumpPower *= 1.2;
+                    player.velocityY = jumpPower;
+                    player.canTripleJump = false;
+                    player.jumpCount = 3;
+                    createTripleJumpParticles();
+                    updateJumpIndicator();
                 }
             }
         }
@@ -366,6 +392,17 @@
                 player.slideTimer = player.slideDuration;
                 player.height = 25;
                 createSlideParticles();
+            }
+        }
+        
+        function updateJumpIndicator() {
+            jumpIndicator.classList.remove('hidden');
+            jumpCountElement.textContent = player.jumpCount;
+            
+            if (player.jumpCount === 3) {
+                setTimeout(() => {
+                    jumpIndicator.classList.add('hidden');
+                }, 1000);
             }
         }
         
@@ -393,6 +430,20 @@
                     size: Math.random() * 5 + 2,
                     color: '#ff00ff',
                     life: 0.8
+                });
+            }
+        }
+        
+        function createTripleJumpParticles() {
+            for (let i = 0; i < 16; i++) {
+                particles.push({
+                    x: player.x + player.width/2,
+                    y: player.y + player.height/2,
+                    vx: (Math.random() - 0.5) * 150,
+                    vy: (Math.random() - 0.5) * 100,
+                    size: Math.random() * 6 + 3,
+                    color: '#ffff00',
+                    life: 1.0
                 });
             }
         }
@@ -461,11 +512,11 @@
                 });
             }
             
-            // Generate lots of coins
+            // Generate tons of coins
             for (let i = 0; i < levelData.coinCount; i++) {
                 coins.push({
-                    x: 100 + i * 80,
-                    y: 300 + Math.sin(i * 0.3) * 80,
+                    x: 100 + i * 60,
+                    y: 250 + Math.sin(i * 0.3) * 100,
                     radius: 15,
                     collected: false,
                     animation: 0,
@@ -473,7 +524,7 @@
                 });
             }
             
-            // Generate power-ups
+            // Generate lots of power-ups
             const powerTypes = ['super_jump', 'magnet', 'shield', 'speed'];
             for (let i = 0; i < levelData.powerupCount; i++) {
                 powerups.push({
@@ -545,7 +596,9 @@
             } else {
                 player.onGround = true;
                 player.canDoubleJump = true;
+                player.canTripleJump = true;
                 player.jumpCount = 0;
+                jumpIndicator.classList.add('hidden');
             }
             
             // Handle jump cooldown
@@ -681,19 +734,19 @@
                 
                 coin.animation += delta * 6;
                 
-                // Magnet effect - automatic collection
+                // Super magnet effect - automatic collection
                 if (player.hasMagnet) {
                     const dx = player.x - coin.x;
                     const dy = player.y - coin.y;
                     const distance = Math.sqrt(dx * dx + dy * dy);
                     
                     if (distance < player.magnetRange) {
-                        coin.x += (dx / distance) * 300 * delta;
-                        coin.y += (dy / distance) * 300 * delta;
+                        coin.x += (dx / distance) * 400 * delta;
+                        coin.y += (dy / distance) * 400 * delta;
                     }
                 }
                 
-                // Easier collection - larger hitbox
+                // Super easy collection - very large hitbox
                 if (checkCircleRectCollision(coin, player)) {
                     coin.collected = true;
                     score += coin.value;
@@ -704,7 +757,9 @@
                     const currentTime = Date.now();
                     if (currentTime - lastCoinTime < 2000) {
                         combo++;
-                        score += combo * 5; // Combo bonus
+                        score += combo * 
+
+ 5; // Combo bonus
                         updateComboDisplay();
                     } else {
                         combo = 1;
@@ -736,15 +791,15 @@
                     break;
                 case 'speed':
                     player.hasSpeedBoost = true;
-                    player.speedBoostTimer = 5.0;
+                    player.speedBoostTimer = 6.0;
                     break;
                 case 'magnet':
                     player.hasMagnet = true;
-                    player.magnetTimer = 10.0;
+                    player.magnetTimer = 15.0;
                     break;
                 case 'super_jump':
                     player.hasSuperJump = true;
-                    player.superJumpTimer = 8.0;
+                    player.superJumpTimer = 10.0;
                     break;
             }
             updatePowerupIndicator();
@@ -781,8 +836,6 @@
         
         function createCoinParticles(x, y) {
             for (let i = 0; i < 12; i++) {
-               
-
                 particles.push({
                     x: x,
                     y: y,
@@ -826,7 +879,7 @@
             const closestX = Math.max(rect.x, Math.min(circle.x, rect.x + rect.width));
             const closestY = Math.max(rect.y, Math.min(circle.y, rect.y + rect.height));
             const distance = Math.sqrt((circle.x - closestX) ** 2 + (circle.y - closestY) ** 2);
-            return distance < circle.radius + 10; // Larger hitbox for easier collection
+            return distance < circle.radius + 15; // Very large hitbox for super easy collection
         }
         
         function render() {
@@ -1038,7 +1091,7 @@
                 ctx.strokeStyle = '#ff00ff';
                 ctx.lineWidth = 2;
                 ctx.setLineDash([8, 8]);
-                ctx.strokeRect(player.x - 25, player.y - 25, player.width + 50, player.height + 50);
+                ctx.strokeRect(player.x - 30, player.y - 30, player.width + 60, player.height + 60);
                 ctx.setLineDash([]);
             }
             
@@ -1134,6 +1187,7 @@
                 player.height = 50;
                 player.canJump = true;
                 player.canDoubleJump = true;
+                player.canTripleJump = true;
                 player.jumpCooldown = 0;
                 player.jumpCount = 0;
                 combo = 0;
@@ -1144,6 +1198,7 @@
                 levelCompleteScreen.classList.add('hidden');
                 powerupIndicator.classList.add('hidden');
                 comboIndicator.classList.add('hidden');
+                jumpIndicator.classList.add('hidden');
                 
                 // Initialize new level
                 initializeLevel();
@@ -1173,6 +1228,7 @@
             player.height = 50;
             player.canJump = true;
             player.canDoubleJump = true;
+            player.canTripleJump = true;
             player.jumpCooldown = 0;
             player.jumpCount = 0;
             
@@ -1185,6 +1241,7 @@
             levelCompleteScreen.classList.add('hidden');
             powerupIndicator.classList.add('hidden');
             comboIndicator.classList.add('hidden');
+            jumpIndicator.classList.add('hidden');
             
             initializeLevel();
         }

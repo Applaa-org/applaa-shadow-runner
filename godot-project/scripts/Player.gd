@@ -3,9 +3,10 @@ extends CharacterBody2D
 const SPEED = 120.0
 const JUMP_VELOCITY = -350.0
 const DOUBLE_JUMP_VELOCITY = -300.0
+const TRIPLE_JUMP_VELOCITY = -280.0
 const SLIDE_DURATION = 1.0
 const GRAVITY = 500.0
-const MAGNET_RANGE = 100.0
+const MAGNET_RANGE = 150.0
 
 @onready var sprite = $Sprite2D
 @onready var collision_shape = $CollisionShape2D
@@ -24,6 +25,7 @@ var has_super_jump = false
 var is_jumping = false
 var can_jump = true
 var can_double_jump = true
+var can_triple_jump = true
 var jump_cooldown = 0.0
 var speed_boost_timer = 0.0
 var magnet_timer = 0.0
@@ -35,7 +37,7 @@ func _ready():
 	setup_character_appearance()
 
 func setup_character_appearance():
-	# Make character look more vibrant
+	# Make character look amazing
 	head.modulate = Color.FLORAL_WHITE
 	head.position = Vector2(0, -20)
 	body.modulate = Color.CYAN
@@ -51,6 +53,7 @@ func _physics_process(delta):
 		is_jumping = false
 		can_jump = true
 		can_double_jump = true
+		can_triple_jump = true
 		jump_count = 0
 	
 	# Handle jump cooldown
@@ -81,7 +84,7 @@ func _physics_process(delta):
 		if super_jump_timer <= 0:
 			has_super_jump = false
 	
-	# Handle jump with double jump
+	# Handle triple jump
 	if Input.is_action_just_pressed("jump") and not is_sliding:
 		if is_on_floor() and can_jump:
 			# First jump
@@ -103,6 +106,15 @@ func _physics_process(delta):
 			can_double_jump = false
 			jump_count = 2
 			animate_double_jump()
+		elif can_triple_jump and jump_count == 2:
+			# Triple jump
+			var jump_power = TRIPLE_JUMP_VELOCITY
+			if has_super_jump:
+				jump_power *= 1.2
+			velocity.y = jump_power
+			can_triple_jump = false
+			jump_count = 3
+			animate_triple_jump()
 	
 	# Handle slide
 	if Input.is_action_just_pressed("slide") and is_on_floor() and not is_sliding:
@@ -130,7 +142,7 @@ func attract_coins():
 		var distance = global_position.distance_to(coin.global_position)
 		if distance <= MAGNET_RANGE:
 			var direction = (global_position - coin.global_position).normalized()
-			coin.global_position += direction * 400 * get_process_delta_time()
+			coin.global_position += direction * 500 * get_process_delta_time()
 
 func animate_jump():
 	# Jump animation
@@ -147,6 +159,16 @@ func animate_double_jump():
 	await get_tree().create_timer(0.1).timeout
 	sprite.scale.x = 1.0
 	sprite.rotation = 0
+
+func animate_triple_jump():
+	# Triple jump animation with spin
+	sprite.rotation = 0.5
+	sprite.scale.x = 1.3
+	sprite.scale.y = 0.8
+	await get_tree().create_timer(0.15).timeout
+	sprite.rotation = 0
+	sprite.scale.x = 1.0
+	sprite.scale.y = 1.0
 
 func update_character_animation():
 	# Enhanced walking animation
@@ -181,15 +203,15 @@ func enable_shield():
 
 func enable_speed_boost():
 	has_speed_boost = true
-	speed_boost_timer = 5.0
+	speed_boost_timer = 6.0
 
 func enable_magnet():
 	has_magnet = true
-	magnet_timer = 10.0
+	magnet_timer = 15.0
 
 func enable_super_jump():
 	has_super_jump = true
-	super_jump_timer = 8.0
+	super_jump_timer = 10.0
 
 func disable_shield():
 	has_shield = false

@@ -1,8 +1,8 @@
 {
   "game": {
-    "name": "Shadow Runner - Adventure",
+    "name": "Shadow Runner - Triple Jump",
     "type": "2D",
-    "description": "An exciting adventure runner with smooth controls and fun gameplay.",
+    "description": "Ultimate adventure with triple jump for maximum collection!",
     "genre": "adventure",
     "version": "1.0.0"
   },
@@ -21,11 +21,12 @@
   "player": {
     "speed": 120,
     "jumpVelocity": -350,
+    "tripleJumpVelocity": -280,
     "slideDuration": 1.0,
     "health": 100,
-    "doubleJump": true,
+    "tripleJump": true,
     "wallJump": false,
-    "magnetRange": 100
+    "magnetRange": 150
   },
   "controls": {
     "jump": ["Space", "W", "Up Arrow"],
@@ -34,7 +35,7 @@
   },
   "levels": [
     {
-      "name": "Crystal Caves",
+      "name": "Crystal Paradise",
       "theme": "crystal",
       "background": "#1a0033",
       "platformColor": "#4a0080",
@@ -42,7 +43,7 @@
       "difficulty": 1
     },
     {
-      "name": "Golden Desert",
+      "name": "Golden Valley",
       "theme": "desert",
       "background": "#ff8c00",
       "platformColor": "#ffa500",
@@ -50,7 +51,7 @@
       "difficulty": 2
     },
     {
-      "name": "Ocean Depths",
+      "name": "Ocean Paradise",
       "theme": "ocean",
       "background": "#006994",
       "platformColor": "#0099cc",
@@ -58,7 +59,7 @@
       "difficulty": 3
     },
     {
-      "name": "Volcano Peak",
+      "name": "Volcano Heaven",
       "theme": "volcano",
       "background": "#8b0000",
       "platformColor": "#dc143c",
@@ -66,7 +67,7 @@
       "difficulty": 4
     },
     {
-      "name": "Sky Temple",
+      "name": "Sky Paradise",
       "theme": "sky",
       "background": "#87ceeb",
       "platformColor": "#b0e0e6",
@@ -77,22 +78,22 @@
   "powerups": [
     {
       "name": "super_jump",
-      "duration": 8.0,
+      "duration": 10.0,
       "effect": "enhanced_jump"
     },
     {
       "name": "magnet",
-      "duration": 10.0,
+      "duration": 15.0,
       "effect": "coin_magnet"
     },
     {
       "name": "shield",
-      "duration": 6.0,
+      "duration": 8.0,
       "effect": "invincibility"
     },
     {
       "name": "speed",
-      "duration": 5.0,
+      "duration": 6.0,
       "effect": "speed_boost"
     }
   ],
