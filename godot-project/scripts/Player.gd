@@ -56,7 +56,7 @@ func _physics_process(delta):
 		can_triple_jump = true
 		jump_count = 0
 	
-	# Handle jump cooldown
+	# Handle jump cooldown - MUCH FASTER
 	if jump_cooldown > 0:
 		jump_cooldown -= delta
 		if jump_cooldown <= 0:
@@ -84,21 +84,21 @@ func _physics_process(delta):
 		if super_jump_timer <= 0:
 			has_super_jump = false
 	
-	# Handle triple jump
+	# Handle triple jump - INSTANT RESPONSE
 	if Input.is_action_just_pressed("jump") and not is_sliding:
 		if is_on_floor() and can_jump:
-			# First jump
+			# First jump - INSTANT
 			var jump_power = JUMP_VELOCITY
 			if has_super_jump:
 				jump_power *= 1.5
 			velocity.y = jump_power
 			is_jumping = true
 			can_jump = false
-			jump_cooldown = 0.1
+			jump_cooldown = 0.01  # Almost instant cooldown
 			jump_count = 1
 			animate_jump()
 		elif can_double_jump and jump_count == 1:
-			# Double jump
+			# Double jump - INSTANT
 			var jump_power = DOUBLE_JUMP_VELOCITY
 			if has_super_jump:
 				jump_power *= 1.3
@@ -107,7 +107,7 @@ func _physics_process(delta):
 			jump_count = 2
 			animate_double_jump()
 		elif can_triple_jump and jump_count == 2:
-			# Triple jump
+			# Triple jump - INSTANT
 			var jump_power = TRIPLE_JUMP_VELOCITY
 			if has_super_jump:
 				jump_power *= 1.2
@@ -116,7 +116,7 @@ func _physics_process(delta):
 			jump_count = 3
 			animate_triple_jump()
 	
-	# Handle slide
+	# Handle slide - INSTANT RESPONSE
 	if Input.is_action_just_pressed("slide") and is_on_floor() and not is_sliding:
 		start_slide()
 	
@@ -126,7 +126,7 @@ func _physics_process(delta):
 		current_speed *= 1.5
 	velocity.x = current_speed
 	
-	# Move and slide
+	# Move and slide - IMMEDIATE
 	move_and_slide()
 	
 	# Update character animation
@@ -145,27 +145,27 @@ func attract_coins():
 			coin.global_position += direction * 500 * get_process_delta_time()
 
 func animate_jump():
-	# Jump animation
+	# Jump animation - FASTER
 	legs.scale.y = 0.8
 	body.scale.y = 1.1
-	await get_tree().create_timer(0.2).timeout
+	await get_tree().create_timer(0.1).timeout  # Faster animation
 	legs.scale.y = 1.0
 	body.scale.y = 1.0
 
 func animate_double_jump():
-	# Double jump animation with flip
+	# Double jump animation - FASTER
 	sprite.scale.x = 1.2
 	sprite.rotation = 0.2
-	await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.05).timeout  # Much faster
 	sprite.scale.x = 1.0
 	sprite.rotation = 0
 
 func animate_triple_jump():
-	# Triple jump animation with spin
+	# Triple jump animation - FASTER
 	sprite.rotation = 0.5
 	sprite.scale.x = 1.3
 	sprite.scale.y = 0.8
-	await get_tree().create_timer(0.15).timeout
+	await get_tree().create_timer(0.08).timeout  # Faster
 	sprite.rotation = 0
 	sprite.scale.x = 1.0
 	sprite.scale.y = 1.0
@@ -224,7 +224,7 @@ func take_damage():
 		disable_shield()
 
 func animate_hit():
-	# Flash red animation
+	# Flash red animation - FASTER
 	sprite.modulate = Color.RED
-	await get_tree().create_timer(0.1).timeout
+	await get_tree().create_timer(0.05).timeout  # Faster flash
 	sprite.modulate = Color.WHITE

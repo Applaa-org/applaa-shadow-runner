@@ -325,46 +325,62 @@
             }
         ];
         
-        // Input handling - TRIPLE JUMP CONTROLS
+        // Input handling - INSTANT RESPONSE
         let keys = {};
+        let jumpPressed = false;
+        let slidePressed = false;
         
-        // Event listeners
+        // Event listeners - INSTANT RESPONSE
         window.addEventListener('keydown', (e) => {
             keys[e.key.toLowerCase()] = true;
             keys[e.code] = true;
             
             if (e.key === ' ') {
                 e.preventDefault();
-                handleJump();
+                if (!jumpPressed) {  // Prevent multiple triggers
+                    jumpPressed = true;
+                    handleJump();
+                }
             }
             
             if (e.key === 'ArrowDown') {
                 e.preventDefault();
-                handleSlide();
+                if (!slidePressed) {  // Prevent multiple triggers
+                    slidePressed = true;
+                    handleSlide();
+                }
             }
         });
         
         window.addEventListener('keyup', (e) => {
             keys[e.key.toLowerCase()] = false;
             keys[e.code] = false;
+            
+            if (e.key === ' ') {
+                jumpPressed = false;
+            }
+            
+            if (e.key === 'ArrowDown') {
+                slidePressed = false;
+            }
         });
         
         function handleJump() {
             if (!gameStarted || gameOver || levelComplete) return;
             if (!player.isSliding) {
                 if (player.onGround && player.canJump) {
-                    // First jump
+                    // First jump - INSTANT
                     let jumpPower = player.jumpPower;
                     if (player.hasSuperJump) jumpPower *= 1.5;
                     player.velocityY = jumpPower;
                     player.onGround = false;
                     player.canJump = false;
-                    player.jumpCooldown = 0.1;
+                    player.jumpCooldown = 0.01;  // Almost instant
                     player.jumpCount = 1;
                     createJumpParticles();
                     updateJumpIndicator();
                 } else if (player.canDoubleJump && player.jumpCount === 1) {
-                    // Double jump
+                    // Double jump - INSTANT
                     let jumpPower = player.doubleJumpPower;
                     if (player.hasSuperJump) jumpPower *= 1.3;
                     player.velocityY = jumpPower;
@@ -373,7 +389,7 @@
                     createDoubleJumpParticles();
                     updateJumpIndicator();
                 } else if (player.canTripleJump && player.jumpCount === 2) {
-                    // Triple jump
+                    // Triple jump - INSTANT
                     let jumpPower = player.tripleJumpPower;
                     if (player.hasSuperJump) jumpPower *= 1.2;
                     player.velocityY = jumpPower;
@@ -551,7 +567,7 @@
         function update(delta) {
             if (!gameStarted || gameOver || levelComplete) return;
             
-            // Update player
+            // Update player - INSTANT RESPONSE
             updatePlayer(delta);
             
             // Update camera
@@ -601,7 +617,7 @@
                 jumpIndicator.classList.add('hidden');
             }
             
-            // Handle jump cooldown
+            // Handle jump cooldown - INSTANT
             if (player.jumpCooldown > 0) {
                 player.jumpCooldown -= delta;
                 if (player.jumpCooldown <= 0) {
@@ -647,7 +663,7 @@
             }
             player.velocityX = currentSpeed;
             
-            // Update position
+            // Update position - INSTANT
             player.x += player.velocityX * delta;
             player.y += player.velocityY * delta;
             
@@ -757,9 +773,7 @@
                     const currentTime = Date.now();
                     if (currentTime - lastCoinTime < 2000) {
                         combo++;
-                        score += combo * 
-
- 5; // Combo bonus
+                        score += combo * 5; // Combo bonus
                         updateComboDisplay();
                     } else {
                         combo = 1;
