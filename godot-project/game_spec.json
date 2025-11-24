@@ -2,7 +2,7 @@
   "game": {
     "name": "Shadow Runner - Triple Jump",
     "type": "2D",
-    "description": "Ultimate adventure with triple jump for maximum collection!",
+    "description": "Ultimate adventure with triple jump for maximum collection! Works on mobile and desktop!",
     "genre": "adventure",
     "version": "1.0.0"
   },
@@ -29,9 +29,9 @@
     "magnetRange": 150
   },
   "controls": {
-    "jump": ["Space", "W", "Up Arrow"],
-    "slide": ["S", "Down Arrow"],
-    "pause": ["Escape"]
+    "jump": ["Space", "W", "Up Arrow", "Touch"],
+    "slide": ["S", "Down Arrow", "Swipe Down"],
+    "pause": ["Escape", "Menu Button"]
   },
   "levels": [
     {
